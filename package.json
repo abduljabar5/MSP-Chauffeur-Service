@@ -1,0 +1,13 @@
+{
+  "name": "tc-black-car-site",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "netlify dev"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^8.2.0",
+    "stripe": "^15.8.0"
+  }
+}

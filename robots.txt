@@ -1,0 +1,7 @@
+# MSP Chauffeur Service — robots.txt
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /confirmation.html
+
+Sitemap: https://tcblackcar.com/sitemap.xml

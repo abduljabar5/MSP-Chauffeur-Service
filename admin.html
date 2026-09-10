@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookings · Admin — MSP Chauffeur Service</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Prata&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Tailwind + shared design system -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="tw-config.js"></script>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="site.css">
+
+    <style>
+        /* Deep-link focus highlight: brass ring + brief pulse, then fade. */
+        @keyframes tcb-focus-pulse {
+            0%   { box-shadow: 0 0 0 0 rgba(180, 154, 94, 0.5); }
+            70%  { box-shadow: 0 0 0 12px rgba(180, 154, 94, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(180, 154, 94, 0); }
+        }
+        .focused-row {
+            border-color: rgba(180, 154, 94, 0.75) !important;
+            background-color: rgba(180, 154, 94, 0.06) !important;
+            animation: tcb-focus-pulse 1.6s ease-out 0s 2;
+        }
+    </style>
+</head>
+<body class="bg-lacquer-950 text-ivory-100 font-sans antialiased min-h-screen flex flex-col">
+
+<header class="py-5 border-b border-brass-400/15 bg-lacquer-950/95">
+    <div class="max-w-4xl mx-auto px-6 flex items-center justify-between">
+        <a href="index.html" class="flex items-center gap-3 group">
+            <div class="seal !w-10 !h-10 !text-sm" aria-hidden="true">★</div>
+            <div>
+                <span class="block text-lg font-display text-brass-300">MSP Chauffeur Service</span>
+                <span class="block text-[10px] text-brass-400 tracking-luxe uppercase">Bookings · Admin</span>
+            </div>
+        </a>
+        <a href="tel:+16126665004" class="text-lacquer-300 hover:text-brass-300 transition-colors text-sm font-light">
+            (612) 666-5004
+        </a>
+    </div>
+</header>
+
+<main class="flex-1 px-6 py-12">
+    <div class="max-w-4xl mx-auto w-full">
+
+        <!-- Auth gate -->
+        <section id="auth-gate" class="hidden plate bg-oxblood-900/30 p-7 mb-6 max-w-xl mx-auto">
+            <h2 class="font-display text-oxblood-300 text-lg mb-2">Admin token required</h2>
+            <p class="text-sm text-lacquer-300 font-light mb-5">Append <code class="text-brass-300 font-mono">?token=YOUR_TOKEN</code> to the URL, or paste it below to save in this browser.</p>
+            <div class="flex gap-2">
+                <input id="manual-token" type="password" placeholder="Paste admin token" class="input-luxury flex-1 px-4 py-3 text-sm">
+                <button onclick="saveToken()" class="btn-carmine !py-3 !px-6">Save</button>
+            </div>
+        </section>
+
+        <!-- Admin -->
+        <section id="form-section" class="hidden">
+            <div class="flex items-end justify-between mb-10 gap-6">
+                <div>
+                    <span class="eyebrow mb-3">Dispatch Ledger</span>
+                    <h1 class="text-3xl font-display text-ivory-100 mb-2">Bookings</h1>
+                    <p class="text-lacquer-300 font-light text-sm">Click <strong class="text-oxblood-300 font-medium">Cancel</strong> on any row to send the customer a cancellation email + SMS, cancel scheduled reminders, and remove the calendar event.</p>
+                </div>
+                <button type="button" onclick="clearToken()" class="text-[11px] text-lacquer-400 hover:text-brass-300 transition-colors uppercase tracking-luxe flex-shrink-0">Sign out</button>
+            </div>
+
+            <!-- Booking list -->
+            <section id="list-section">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+                    <div class="flex items-center gap-3">
+                        <input id="filter-input" type="text" placeholder="Filter by name, conf #, address..."
+                               class="input-luxury px-3 py-2 text-xs w-72">
+                    </div>
+                    <button id="refresh-btn" type="button" class="text-xs text-lacquer-300 hover:text-brass-300 transition-colors flex items-center gap-1.5 uppercase tracking-plate" title="Refresh">
+                        <span>↻</span> Refresh
+                    </button>
+                </div>
+                <div id="list-status" class="text-xs text-lacquer-400 tracking-plate mb-3"></div>
+                <div id="bookings-list" class="space-y-2"></div>
+            </section>
+
+            <!-- Result panel -->
+            <div id="result" class="hidden mt-6 rounded-sm p-6 border"></div>
+
+            <!-- Cancellation form (modal) -->
+            <div id="cancel-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center px-4 bg-lacquer-950/85 backdrop-blur-sm">
+                <div class="plate bg-lacquer-900 p-7 max-w-md w-full shadow-2xl shadow-black/60">
+                    <div class="flex items-start justify-between mb-5">
+                        <div>
+                            <h2 class="text-xl font-display text-ivory-100">Cancel booking</h2>
+                            <p id="modal-conf" class="text-xs font-mono text-brass-300 mt-1">TCB-XXXXXX</p>
+                        </div>
+                        <button type="button" onclick="closeCancelModal()" class="text-lacquer-400 hover:text-ivory-100 text-xl leading-none transition-colors">&times;</button>
+                    </div>
+                    <form id="cancel-form" class="space-y-4">
+                        <input type="hidden" id="confirmation" name="confirmation">
+                        <div>
+                            <label for="reason" class="block text-xs text-brass-400 tracking-luxe uppercase mb-2">Reason <span class="text-lacquer-400 normal-case tracking-normal">(optional, shown to customer)</span></label>
+                            <textarea id="reason" name="reason" rows="3"
+                                      placeholder="e.g., Driver illness — sorry for the inconvenience."
+                                      class="input-luxury w-full px-4 py-3 resize-none text-sm"></textarea>
+                        </div>
+                        <p class="text-[11px] text-lacquer-400 font-light">Refund must be issued manually in Stripe.</p>
+                        <div class="flex gap-2">
+                            <button type="button" onclick="closeCancelModal()" class="btn-ghost flex-1 !py-3 !px-4">Keep booking</button>
+                            <button id="submit-btn" type="submit" class="btn-carmine flex-1 !py-3 !px-4">
+                                Cancel booking
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<footer class="py-6 border-t border-brass-400/15">
+    <div class="max-w-4xl mx-auto px-6 text-center text-xs text-lacquer-500 tracking-plate uppercase">
+        Internal admin tool · MSP Chauffeur Service
+    </div>
+</footer>
+
+<script>
+    const TOKEN_STORAGE_KEY = 'tcb_admin_cancel_token';
+
+    function getToken() {
+        const url = new URLSearchParams(window.location.search);
+        const fromUrl = url.get('token');
+        if (fromUrl) {
+            localStorage.setItem(TOKEN_STORAGE_KEY, fromUrl);
+            // Strip just the token from the URL so it doesn't sit in history/screenshots.
+            // Preserve any other params (e.g., focus=TCB-XXXXXX from an email link).
+            url.delete('token');
+            const newSearch = url.toString();
+            const newUrl = window.location.pathname + (newSearch ? '?' + newSearch : '');
+            window.history.replaceState({}, '', newUrl);
+            return fromUrl;
+        }
+        return localStorage.getItem(TOKEN_STORAGE_KEY);
+    }
+
+    function saveToken() {
+        const v = document.getElementById('manual-token').value.trim();
+        if (!v) return;
+        localStorage.setItem(TOKEN_STORAGE_KEY, v);
+        renderState();
+        loadBookings();
+    }
+
+    function clearToken() {
+        localStorage.removeItem(TOKEN_STORAGE_KEY);
+        renderState();
+    }
+
+    function renderState() {
+        const token = getToken();
+        const authGate = document.getElementById('auth-gate');
+        const formSection = document.getElementById('form-section');
+        if (token) {
+            authGate.classList.add('hidden');
+            formSection.classList.remove('hidden');
+        } else {
+            authGate.classList.remove('hidden');
+            formSection.classList.add('hidden');
+        }
+    }
+
+    function showResult(html, kind) {
+        const r = document.getElementById('result');
+        const colors = {
+            success: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-100',
+            warn: 'bg-yellow-500/10 border-yellow-500/30 text-yellow-100',
+            error: 'bg-oxblood-500/10 border-oxblood-500/40 text-oxblood-300'
+        };
+        r.className = `mt-6 rounded-sm p-6 border ${colors[kind] || colors.success}`;
+        r.innerHTML = html;
+        r.classList.remove('hidden');
+        setTimeout(() => r.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50);
+    }
+
+    function fmtItem(label, value) {
+        const ok = ['cancelled', 'sent', 'deleted'].includes(value);
+        const skip = ['skipped', 'no_id', 'no_sid', 'not_found'].includes(value);
+        const cls = ok ? 'text-emerald-300' : (skip ? 'text-lacquer-300' : 'text-oxblood-300');
+        return `<li><span class="text-lacquer-300">${label}:</span> <span class="${cls} font-mono text-xs">${value}</span></li>`;
+    }
+
+    // ----- Booking list -----
+    let bookingsCache = [];
+
+    function escapeHtml(s) {
+        return String(s == null ? '' : s)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function shortLoc(s) {
+        const str = String(s || '');
+        const first = str.split(',')[0];
+        return first.length > 38 ? first.slice(0, 36) + '…' : first;
+    }
+
+    // Heuristic: parse the booking's display date+time into a Date for sorting.
+    // Format coming from the booking flow: "Wed, May 10, 2026" + "9:30 AM"
+    function tripTime(b) {
+        if (!b || !b.date) return 0;
+        const t = `${b.date} ${b.time || '12:00 AM'}`;
+        const ms = Date.parse(t);
+        return Number.isFinite(ms) ? ms : 0;
+    }
+
+    function statusBadge(rec) {
+        if (rec.cancelled) return '<span class="text-[10px] tracking-luxe uppercase bg-oxblood-500/20 text-oxblood-300 px-2 py-0.5 rounded-sm">Cancelled</span>';
+        const tt = tripTime(rec.booking);
+        if (tt && tt < Date.now()) return '<span class="text-[10px] tracking-luxe uppercase bg-lacquer-700 text-lacquer-200 px-2 py-0.5 rounded-sm">Past</span>';
+        return '<span class="text-[10px] tracking-luxe uppercase bg-emerald-500/15 text-emerald-300 px-2 py-0.5 rounded-sm">Upcoming</span>';
+    }
+
+    // Live countdown / "X ago" string. For cancelled bookings, returns null.
+    // Gets a color hint based on urgency (urgent = within 1 hour upcoming).
+    function countdownText(rec) {
+        if (rec.cancelled) return { text: '', urgent: false };
+        const tt = tripTime(rec.booking);
+        if (!tt) return { text: '', urgent: false };
+        const diff = tt - Date.now();
+        if (diff <= 0) {
+            // Past
+            const ago = Math.abs(diff);
+            const m = Math.floor(ago / 60000);
+            const h = Math.floor(m / 60);
+            const d = Math.floor(h / 24);
+            if (d >= 1) return { text: `${d}d ago`, urgent: false };
+            if (h >= 1) return { text: `${h}h ago`, urgent: false };
+            return { text: `${m}m ago`, urgent: false };
+        }
+        const minutes = Math.floor(diff / 60000);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+        if (days >= 1) return { text: `in ${days}d ${hours % 24}h`, urgent: false };
+        if (hours >= 1) return { text: `in ${hours}h ${minutes % 60}m`, urgent: hours < 2 };
+        if (minutes >= 1) return { text: `in ${minutes}m`, urgent: true };
+        return { text: 'imminent', urgent: true };
+    }
+
+    function renderRow(rec) {
+        const b = rec.booking || {};
+        const fade = rec.cancelled ? 'opacity-50' : '';
+        const cancelBtn = rec.cancelled
+            ? `<span class="text-[11px] text-lacquer-500 italic">cancelled</span>`
+            : `<button data-conf="${escapeHtml(rec.confirmationNumber)}" class="row-cancel text-[11px] uppercase tracking-luxe px-3 py-1.5 rounded-sm bg-oxblood-500/20 hover:bg-oxblood-500/35 text-oxblood-300 transition-colors">Cancel</button>`;
+
+        const cd = countdownText(rec);
+        const cdClass = cd.urgent ? 'text-amber-300 font-semibold' : 'text-lacquer-300';
+        const countdownHtml = cd.text
+            ? `<span class="text-lacquer-500 mx-1">·</span><span class="countdown ${cdClass}" data-tt="${tripTime(b)}" data-cancelled="${rec.cancelled ? '1' : '0'}">${escapeHtml(cd.text)}</span>`
+            : '';
+
+        return `
+        <div class="bookings-row ${fade} bg-lacquer-900/50 border border-brass-400/15 rounded-sm p-4 hover:border-brass-400/40 transition-colors" data-conf="${escapeHtml(rec.confirmationNumber)}">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-3 mb-1 flex-wrap">
+                        <span class="font-mono text-sm text-brass-300">${escapeHtml(rec.confirmationNumber)}</span>
+                        ${statusBadge(rec)}
+                        <span class="text-xs text-lacquer-400">$${escapeHtml(b.total)}${b.paymentMethod === 'online' ? ' · paid' : ' · cash'}</span>
+                    </div>
+                    <div class="text-sm text-ivory-100 truncate">${escapeHtml(b.name || '(no name)')} · ${escapeHtml(b.phone || '')}</div>
+                    <div class="text-xs text-lacquer-300 truncate mt-1">
+                        <span class="text-lacquer-200">${escapeHtml(b.date || '')}</span>${b.time ? ` at <span class="text-lacquer-200">${escapeHtml(b.time)}</span>` : ''}${countdownHtml}
+                        <span class="text-lacquer-500 mx-1">·</span>
+                        ${escapeHtml(shortLoc(b.pickup))} → ${escapeHtml(shortLoc(b.dropoff))}
+                    </div>
+                </div>
+                <div class="flex-shrink-0">${cancelBtn}</div>
+            </div>
+        </div>`;
+    }
+
+    // Refresh just the countdown spans without re-rendering the whole list.
+    // Called every minute so the times stay live.
+    function updateCountdowns() {
+        document.querySelectorAll('.countdown').forEach(el => {
+            const tt = parseFloat(el.dataset.tt);
+            const cancelled = el.dataset.cancelled === '1';
+            if (cancelled || !tt) { el.textContent = ''; return; }
+            const diff = tt - Date.now();
+            let text, urgent = false;
+            if (diff <= 0) {
+                const ago = Math.abs(diff);
+                const m = Math.floor(ago / 60000);
+                const h = Math.floor(m / 60);
+                const d = Math.floor(h / 24);
+                if (d >= 1) text = `${d}d ago`;
+                else if (h >= 1) text = `${h}h ago`;
+                else text = `${m}m ago`;
+            } else {
+                const minutes = Math.floor(diff / 60000);
+                const hours = Math.floor(minutes / 60);
+                const days = Math.floor(hours / 24);
+                if (days >= 1) text = `in ${days}d ${hours % 24}h`;
+                else if (hours >= 1) { text = `in ${hours}h ${minutes % 60}m`; urgent = hours < 2; }
+                else if (minutes >= 1) { text = `in ${minutes}m`; urgent = true; }
+                else { text = 'imminent'; urgent = true; }
+            }
+            el.textContent = text;
+            el.classList.toggle('text-amber-300', urgent);
+            el.classList.toggle('font-semibold', urgent);
+            el.classList.toggle('text-lacquer-300', !urgent);
+        });
+    }
+
+    function applyFilter() {
+        const filterText = document.getElementById('filter-input').value.trim().toLowerCase();
+        // Show ALL bookings — no status filter.
+        const list = bookingsCache.filter(rec => {
+            if (!filterText) return true;
+            const hay = [
+                rec.confirmationNumber,
+                rec.booking?.name,
+                rec.booking?.phone,
+                rec.booking?.email,
+                rec.booking?.pickup,
+                rec.booking?.dropoff
+            ].join(' ').toLowerCase();
+            return hay.includes(filterText);
+        });
+
+        // Sort: upcoming non-cancelled first (asc by trip date — soonest first),
+        // then past + cancelled by date desc.
+        list.sort((a, b) => {
+            const ta = tripTime(a.booking);
+            const tb = tripTime(b.booking);
+            const now = Date.now();
+            const aUpcoming = !a.cancelled && ta >= now;
+            const bUpcoming = !b.cancelled && tb >= now;
+            if (aUpcoming && !bUpcoming) return -1;
+            if (!aUpcoming && bUpcoming) return 1;
+            if (aUpcoming) return ta - tb;       // soonest upcoming first
+            return tb - ta;                      // most recent past/cancelled first
+        });
+
+        const container = document.getElementById('bookings-list');
+        if (list.length === 0) {
+            container.innerHTML = `<div class="text-sm text-lacquer-400 italic text-center py-8">No bookings to show.</div>`;
+        } else {
+            container.innerHTML = list.map(renderRow).join('');
+            container.querySelectorAll('.row-cancel').forEach(btn => {
+                btn.addEventListener('click', () => openCancelModal(btn.dataset.conf));
+            });
+        }
+
+        const now = Date.now();
+        const total = bookingsCache.length;
+        const upcoming = bookingsCache.filter(r => !r.cancelled && tripTime(r.booking) >= now).length;
+        const past = bookingsCache.filter(r => !r.cancelled && tripTime(r.booking) < now).length;
+        const cancelled = bookingsCache.filter(r => r.cancelled).length;
+        document.getElementById('list-status').textContent =
+            `${total} total · ${upcoming} upcoming · ${past} past · ${cancelled} cancelled`;
+    }
+
+    async function loadBookings() {
+        const token = getToken();
+        if (!token) return;
+        const status = document.getElementById('list-status');
+        status.textContent = 'Loading...';
+        try {
+            const res = await fetch('/.netlify/functions/list-bookings', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.status === 401) {
+                clearToken();
+                renderState();
+                return;
+            }
+            if (!res.ok) {
+                status.textContent = 'Failed to load bookings.';
+                return;
+            }
+            const data = await res.json();
+            bookingsCache = data.bookings || [];
+            applyFilter();
+            applyFocusHighlight();
+        } catch (e) {
+            status.textContent = `Failed to load: ${e.message}`;
+        }
+    }
+
+    // If the URL had ?focus=TCB-XXX (e.g., the owner clicked the email link),
+    // scroll to that row and pulse-highlight it briefly.
+    function applyFocusHighlight() {
+        const params = new URLSearchParams(window.location.search);
+        const focus = (params.get('focus') || '').toUpperCase();
+        if (!focus) return;
+        const row = document.querySelector(`.bookings-row[data-conf="${focus}"]`);
+        if (!row) return;
+        row.classList.add('focused-row');
+        row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Strip the focus param so refreshing doesn't keep highlighting.
+        const url = new URL(window.location.href);
+        url.searchParams.delete('focus');
+        window.history.replaceState({}, '', url.toString());
+        // Fade the persistent ring after the pulse animation finishes.
+        setTimeout(() => row.classList.remove('focused-row'), 5000);
+    }
+
+    function openCancelModal(confirmationNumber) {
+        document.getElementById('confirmation').value = confirmationNumber;
+        document.getElementById('modal-conf').textContent = confirmationNumber;
+        document.getElementById('reason').value = '';
+        document.getElementById('cancel-modal').classList.remove('hidden');
+        setTimeout(() => document.getElementById('reason').focus(), 50);
+    }
+
+    function closeCancelModal() {
+        document.getElementById('cancel-modal').classList.add('hidden');
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeCancelModal();
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        renderState();
+        if (getToken()) loadBookings();
+
+        document.getElementById('refresh-btn')?.addEventListener('click', loadBookings);
+        document.getElementById('filter-input')?.addEventListener('input', applyFilter);
+        // Tick countdowns every minute so upcoming-trip times stay live.
+        setInterval(updateCountdowns, 60 * 1000);
+
+        document.getElementById('cancel-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const token = getToken();
+            if (!token) { renderState(); return; }
+
+            const confirmation = document.getElementById('confirmation').value.trim().toUpperCase();
+            const reason = document.getElementById('reason').value.trim();
+            if (!confirmation) return;
+
+            const btn = document.getElementById('submit-btn');
+            btn.disabled = true;
+            btn.textContent = 'Cancelling...';
+
+            try {
+                const res = await fetch('/.netlify/functions/cancel-booking', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ confirmationNumber: confirmation, reason })
+                });
+                const data = await res.json().catch(() => ({}));
+
+                if (res.status === 401) {
+                    showResult(`<strong>Unauthorized.</strong> The admin token is wrong or missing.`, 'error');
+                    clearToken();
+                    renderState();
+                    return;
+                }
+                if (res.status === 404) {
+                    showResult(`<strong>Booking not found.</strong> No record for ${confirmation}.`, 'error');
+                    return;
+                }
+                if (data.already) {
+                    showResult(`<strong>Already cancelled.</strong> ${data.message}`, 'warn');
+                    return;
+                }
+                if (!res.ok) {
+                    showResult(`<strong>Error.</strong> ${data.error || 'Unknown error'}`, 'error');
+                    return;
+                }
+
+                const reminderHtml = (data.results.reminders || [])
+                    .map(r => {
+                        const base = fmtItem(r.purpose, r.result);
+                        if (r.error) {
+                            return base.replace('</li>', ` <span class="block text-[10px] text-oxblood-300/70 font-mono mt-0.5 break-all">${escapeHtml(r.error)}</span></li>`);
+                        }
+                        return base;
+                    })
+                    .join('') || '<li class="text-lacquer-400 italic text-xs">No scheduled reminders to cancel.</li>';
+
+                showResult(`
+                    <h3 class="font-display text-ivory-100 mb-3">Cancelled ${data.confirmationNumber}</h3>
+                    <p class="text-sm text-lacquer-200 mb-4">Customer: <strong>${data.customer.name || ''}</strong> · ${data.customer.email || ''} · ${data.customer.phone || ''}</p>
+                    <ul class="space-y-1 text-sm">
+                        ${fmtItem('Customer email', data.results.customerEmail)}
+                        ${fmtItem('Customer SMS', data.results.customerSms)}
+                        ${fmtItem('Owner SMS', data.results.ownerSms)}
+                        ${fmtItem('Calendar event', data.results.calendar)}
+                    </ul>
+                    <h4 class="text-xs uppercase tracking-luxe text-brass-400 mt-5 mb-2">Reminders</h4>
+                    <ul class="space-y-1 text-sm">${reminderHtml}</ul>
+                    ${data.stripeRefundReminder ? `<div class="mt-5 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-sm text-yellow-100 text-sm"><strong>⚠️ ${data.stripeRefundReminder}</strong></div>` : ''}
+                `, 'success');
+
+                document.getElementById('reason').value = '';
+                closeCancelModal();
+                // Refresh the list so the row flips to Cancelled state
+                loadBookings();
+            } catch (err) {
+                showResult(`<strong>Network error.</strong> ${err.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Cancel booking';
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

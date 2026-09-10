@@ -1,0 +1,7 @@
+[build]
+  publish = "."
+  functions = "functions"
+
+[dev]
+  port = 8888
+  # Static site — Netlify CLI serves the files directly.
