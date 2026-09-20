@@ -11,16 +11,27 @@ const CONFIG = {
     // Pricing rates — first 7 miles included in base fare, then per-mile.
     // TC Black Car fleet: adjust rates here in one place.
     rates: {
-        sedan: { base: 60.00, min: 65.00, perMile: 3.30 },   // 1-3 passengers, 1-4 bags
-        suv:   { base: 75.00, min: 80.00, perMile: 3.60 },   // 1-6 passengers, 1-6 bags
-        van:   { base: 110.00, min: 120.00, perMile: 3.90 }  // 1-10 passengers, 1-10 bags
+        sedan:    { base: 60.00,  min: 65.00,  perMile: 3.30, hourly: 75  },  // Mercedes / Lincoln — 1-3 passengers, 4 bags
+        suv:      { base: 75.00,  min: 80.00,  perMile: 3.60, hourly: 90  },  // GMC Yukon Denali — 1-6 passengers, 6 bags
+        escalade: { base: 90.00,  min: 95.00,  perMile: 3.80, hourly: 110 },  // Cadillac Escalade — 1-6 passengers, 6 bags
+        van:      { base: 110.00, min: 120.00, perMile: 3.90, hourly: 130 }   // Mercedes Sprinter — 1-10 passengers, 10 bags
         // Stretch limousine: quote by phone only.
     },
+    // Hourly / as-directed service: flat hourly rate per vehicle, billed in whole hours.
+    hourly: { minimumHours: 3, maximumHours: 12 },
     fees: {
         airport: 15.00,        // MSP pickup/dropoff fee
         nightSurcharge: 20.00, // 7 PM – 6 AM
         meetAndGreet: 15.00,   // chauffeur meets you inside baggage claim
-        childSeat: 25.00       // per installed child safety seat (max 4)
+        childSeat: 25.00,      // per installed child safety seat (max 4)
+        stop: 15.00,           // per extra stop en route (max 3); mileage is routed through the stops
+        maxStops: 3
+    },
+    vehicleNames: {
+        sedan: 'Sedan',
+        suv: 'SUV (GMC Yukon)',
+        escalade: 'Premium SUV (Cadillac Escalade)',
+        van: 'Sprinter Van'
     },
     // Business info
     phone: '+16126665004',
@@ -429,6 +440,14 @@ function calculatePrice(distanceMiles, vehicleType, pickupTime, pickupAddress) {
     return Math.ceil(fare);
 }
 
+// Hourly / as-directed pricing: whole hours at the vehicle's hourly rate.
+function calculateHourlyPrice(vehicleType, hours) {
+    const rates = CONFIG.rates[vehicleType];
+    if (!rates || !rates.hourly) return 0;
+    const h = Math.min(Math.max(parseInt(hours, 10) || 0, CONFIG.hourly.minimumHours), CONFIG.hourly.maximumHours);
+    return Math.ceil(rates.hourly * h);
+}
+
 function isAirportAddress(address) {
     if (!address) return false;
     const lower = address.toLowerCase();
@@ -437,7 +456,7 @@ function isAirportAddress(address) {
            lower.includes('terminal');
 }
 
-async function getDistance(origin, destination) {
+async function getDistance(origin, destination, waypoints = []) {
     return new Promise((resolve) => {
         if (typeof google === 'undefined' || !google.maps) {
             const dist = estimateDistance(origin, destination);
@@ -447,17 +466,23 @@ async function getDistance(origin, destination) {
 
         const service = new google.maps.DirectionsService();
 
+        const stops = (waypoints || []).filter(Boolean).map(location => ({ location, stopover: true }));
+
         service.route({
             origin: origin,
             destination: destination,
+            waypoints: stops,
             travelMode: google.maps.TravelMode.DRIVING
         }, (response, status) => {
             if (status === 'OK' && response.routes[0]) {
-                const leg = response.routes[0].legs[0];
-                const distanceMiles = leg.distance.value * 0.000621371;
+                // Sum every leg so extra stops are billed on the real routed mileage.
+                const legs = response.routes[0].legs;
+                const meters = legs.reduce((sum, leg) => sum + leg.distance.value, 0);
+                const seconds = legs.reduce((sum, leg) => sum + leg.duration.value, 0);
+                const distanceMiles = meters * 0.000621371;
                 resolve({
                     distance: parseFloat(distanceMiles.toFixed(1)),
-                    duration: Math.round(leg.duration.value / 60)
+                    duration: Math.round(seconds / 60)
                 });
             } else {
                 const dist = estimateDistance(origin, destination);
@@ -799,6 +824,7 @@ document.addEventListener('DOMContentLoaded', checkForSavedBooking);
 window.TCBlackCar = {
     CONFIG,
     calculatePrice,
+    calculateHourlyPrice,
     isAirportAddress,
     getDistance,
     showToast,

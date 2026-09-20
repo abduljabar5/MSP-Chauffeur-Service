@@ -10,21 +10,21 @@
     <meta name="keywords" content="MSP airport car service, Minneapolis black car service, airport taxi MSP, town car service Minneapolis, Twin Cities chauffeur service, MSP limo service">
     <meta name="author" content="MSP Chauffeur Service">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://tcblackcar.com/">
+    <link rel="canonical" href="https://mspairportchauffeur.com/">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://tcblackcar.com/">
+    <meta property="og:url" content="https://mspairportchauffeur.com/">
     <meta property="og:title" content="MSP Airport Car Service & Black Car | MSP Chauffeur Service">
     <meta property="og:description" content="Premium black car service in Minneapolis–St. Paul. Fixed rates, flight tracking, 24/7. Book in 60 seconds.">
-    <meta property="og:image" content="https://tcblackcar.com/images/hero-fleet.webp">
+    <meta property="og:image" content="https://mspairportchauffeur.com/images/hero-fleet.webp">
     <meta property="og:locale" content="en_US">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="MSP Airport Car Service & Black Car | MSP Chauffeur Service">
     <meta name="twitter:description" content="Premium black car service in Minneapolis–St. Paul. Fixed rates, flight tracking, 24/7.">
-    <meta name="twitter:image" content="https://tcblackcar.com/images/hero-fleet.webp">
+    <meta name="twitter:image" content="https://mspairportchauffeur.com/images/hero-fleet.webp">
 
     <!-- Preconnect -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,7 +36,8 @@
     <!-- Tailwind + shared design system -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="tw-config.js"></script>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="images/logo/apple-touch-icon.png">
     <link rel="stylesheet" href="site.css">
 
     <!-- Structured Data -->
@@ -44,11 +45,11 @@
     {
         "@context": "https://schema.org",
         "@type": ["LocalBusiness", "LimousineService", "TaxiService"],
-        "@id": "https://tcblackcar.com/#business",
+        "@id": "https://mspairportchauffeur.com/#business",
         "name": "MSP Chauffeur Service",
         "description": "Premium black car, town car, and airport taxi service for Minneapolis–St. Paul International Airport (MSP) and the Twin Cities metro. Fixed all-inclusive rates, real-time flight tracking, professional chauffeurs, 24/7 availability. Established 2012 with 50,000+ completed airport transfers.",
         "slogan": "The Twin Cities, driven properly.",
-        "url": "https://tcblackcar.com",
+        "url": "https://mspairportchauffeur.com",
         "telephone": "+1-612-666-5004",
         "email": "tcblackcar@gmail.com",
         "foundingDate": "2012",
@@ -91,7 +92,7 @@
             "name": "Book a Ride",
             "target": {
                 "@type": "EntryPoint",
-                "urlTemplate": "https://tcblackcar.com/book-a-ride.html",
+                "urlTemplate": "https://mspairportchauffeur.com/book-a-ride.html",
                 "actionPlatform": ["http://schema.org/DesktopWebPlatform", "http://schema.org/MobileWebPlatform"]
             },
             "result": { "@type": "Reservation", "name": "Black Car Reservation" }
@@ -123,7 +124,7 @@
             <div class="flex items-center justify-between h-20 lg:h-24">
                 <!-- Brand -->
                 <a href="index.html" class="flex items-center gap-4 group">
-                    <div class="seal" aria-hidden="true">★</div>
+                    <img src="images/logo/mark.webp" alt="" class="w-12 h-12 rounded-full ring-1 ring-brass-400/50 shadow-lg shadow-black/50" width="1024" height="1024" aria-hidden="true">
                     <div>
                         <span class="block text-lg lg:text-xl font-display text-brass-300 tracking-wide">MSP Chauffeur Service</span>
                         <span class="block text-[10px] text-brass-400 tracking-luxe uppercase">Black Car · MSP</span>
@@ -355,12 +356,13 @@
                                 <!-- Vehicle Selection -->
                                 <div>
                                     <span class="block text-[11px] text-lacquer-300 tracking-plate uppercase mb-3">Select Vehicle</span>
-                                    <div class="grid grid-cols-3 gap-3">
+                                    <div class="grid grid-cols-2 gap-3">
                                         <label class="vehicle-card relative cursor-pointer">
                                             <input type="radio" name="vehicle" value="sedan" class="sr-only">
                                             <div class="relative px-2 py-4 bg-lacquer-800/40 border border-brass-400/15 text-center transition-all duration-300 hover:border-brass-400/40 rounded-sm">
                                                 <div class="vehicle-name text-sm font-medium text-ivory-200">Sedan</div>
-                                                <div class="text-[11px] text-lacquer-400 mt-1">1–3 · 4 bags</div>
+                                                <div class="text-[10px] text-brass-400/80 tracking-wide mt-0.5">Mercedes · Lincoln</div>
+                                                <div class="text-[11px] text-lacquer-400 mt-1">1–3 · 4 bags · from $60</div>
                                             </div>
                                         </label>
                                         <label class="vehicle-card relative cursor-pointer">
@@ -368,14 +370,24 @@
                                             <div class="relative px-2 py-4 bg-lacquer-800/40 border border-brass-400/15 text-center transition-all duration-300 hover:border-brass-400/40 rounded-sm">
                                                 <span class="absolute -top-2 left-1/2 -translate-x-1/2 bg-oxblood-500 text-ivory-100 text-[9px] tracking-plate uppercase px-2 py-0.5 rounded-sm">Popular</span>
                                                 <div class="vehicle-name text-sm font-medium text-ivory-200">SUV</div>
-                                                <div class="text-[11px] text-lacquer-400 mt-1">1–6 · 6 bags</div>
+                                                <div class="text-[10px] text-brass-400/80 tracking-wide mt-0.5">GMC Yukon Denali</div>
+                                                <div class="text-[11px] text-lacquer-400 mt-1">1–6 · 6 bags · from $75</div>
+                                            </div>
+                                        </label>
+                                        <label class="vehicle-card relative cursor-pointer">
+                                            <input type="radio" name="vehicle" value="escalade" class="sr-only">
+                                            <div class="relative px-2 py-4 bg-lacquer-800/40 border border-brass-400/15 text-center transition-all duration-300 hover:border-brass-400/40 rounded-sm">
+                                                <div class="vehicle-name text-sm font-medium text-ivory-200">Premium SUV</div>
+                                                <div class="text-[10px] text-brass-400/80 tracking-wide mt-0.5">Cadillac Escalade</div>
+                                                <div class="text-[11px] text-lacquer-400 mt-1">1–6 · 6 bags · from $90</div>
                                             </div>
                                         </label>
                                         <label class="vehicle-card relative cursor-pointer">
                                             <input type="radio" name="vehicle" value="van" class="sr-only">
                                             <div class="relative px-2 py-4 bg-lacquer-800/40 border border-brass-400/15 text-center transition-all duration-300 hover:border-brass-400/40 rounded-sm">
-                                                <div class="vehicle-name text-sm font-medium text-ivory-200">Van</div>
-                                                <div class="text-[11px] text-lacquer-400 mt-1">1–10 · 10 bags</div>
+                                                <div class="vehicle-name text-sm font-medium text-ivory-200">Sprinter Van</div>
+                                                <div class="text-[10px] text-brass-400/80 tracking-wide mt-0.5">Mercedes-Benz</div>
+                                                <div class="text-[11px] text-lacquer-400 mt-1">1–10 · 10 bags · from $110</div>
                                             </div>
                                         </label>
                                     </div>
@@ -625,6 +637,28 @@
                         </div>
                     </div>
 
+                    <!-- GMC SUV -->
+                    <div class="group plate bg-lacquer-850/60 overflow-hidden hover:bg-lacquer-850 transition-all duration-500 reveal">
+                        <div class="aspect-[4/3] relative overflow-hidden flex items-center justify-center p-6 bg-ivory-100">
+                            <img src="images/fleet/suv-gmc-yukon.webp"
+                                 alt="GMC Yukon Denali black SUV"
+                                 class="w-full object-contain group-hover:scale-105 transition-transform duration-700"
+                                 width="1200" height="896" loading="lazy">
+                        </div>
+                        <div class="p-6 border-t border-brass-400/15">
+                            <h3 class="text-lg font-display text-ivory-100 mb-1">SUV</h3>
+                            <p class="text-xs text-lacquer-400 mb-4">GMC Yukon Denali</p>
+                            <ul class="space-y-2 text-sm text-lacquer-300 mb-4">
+                                <li class="flex items-center gap-2"><span class="w-1 h-1 bg-oxblood-400 rounded-full"></span>Up to 6 passengers</li>
+                                <li class="flex items-center gap-2"><span class="w-1 h-1 bg-oxblood-400 rounded-full"></span>6 bags</li>
+                            </ul>
+                            <div class="flex items-center justify-between pt-4 border-t border-ivory-100/5">
+                                <span class="text-oxblood-300 font-semibold">From $75</span>
+                                <a href="book-a-ride.html" class="text-xs text-lacquer-400 hover:text-brass-300 transition-colors tracking-plate uppercase">Reserve →</a>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- SUV -->
                     <div class="group plate bg-lacquer-850/60 overflow-hidden hover:bg-lacquer-850 transition-all duration-500 relative reveal">
                         <div class="absolute top-4 right-4 z-10">
@@ -644,7 +678,7 @@
                                 <li class="flex items-center gap-2"><span class="w-1 h-1 bg-oxblood-400 rounded-full"></span>6 bags</li>
                             </ul>
                             <div class="flex items-center justify-between pt-4 border-t border-ivory-100/5">
-                                <span class="text-oxblood-300 font-semibold">From $75</span>
+                                <span class="text-oxblood-300 font-semibold">From $90</span>
                                 <a href="book-a-ride.html" class="text-xs text-lacquer-400 hover:text-brass-300 transition-colors tracking-plate uppercase">Reserve →</a>
                             </div>
                         </div>
@@ -667,28 +701,6 @@
                             </ul>
                             <div class="flex items-center justify-between pt-4 border-t border-ivory-100/5">
                                 <span class="text-oxblood-300 font-semibold">From $110</span>
-                                <a href="book-a-ride.html" class="text-xs text-lacquer-400 hover:text-brass-300 transition-colors tracking-plate uppercase">Reserve →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- GMC SUV -->
-                    <div class="group plate bg-lacquer-850/60 overflow-hidden hover:bg-lacquer-850 transition-all duration-500 reveal">
-                        <div class="aspect-[4/3] relative overflow-hidden flex items-center justify-center p-6 bg-ivory-100">
-                            <img src="images/fleet/suv-gmc-yukon.webp"
-                                 alt="GMC Yukon Denali black SUV"
-                                 class="w-full object-contain group-hover:scale-105 transition-transform duration-700"
-                                 width="1200" height="896" loading="lazy">
-                        </div>
-                        <div class="p-6 border-t border-brass-400/15">
-                            <h3 class="text-lg font-display text-ivory-100 mb-1">SUV</h3>
-                            <p class="text-xs text-lacquer-400 mb-4">GMC Yukon Denali</p>
-                            <ul class="space-y-2 text-sm text-lacquer-300 mb-4">
-                                <li class="flex items-center gap-2"><span class="w-1 h-1 bg-oxblood-400 rounded-full"></span>Up to 6 passengers</li>
-                                <li class="flex items-center gap-2"><span class="w-1 h-1 bg-oxblood-400 rounded-full"></span>6 bags</li>
-                            </ul>
-                            <div class="flex items-center justify-between pt-4 border-t border-ivory-100/5">
-                                <span class="text-oxblood-300 font-semibold">From $75</span>
                                 <a href="book-a-ride.html" class="text-xs text-lacquer-400 hover:text-brass-300 transition-colors tracking-plate uppercase">Reserve →</a>
                             </div>
                         </div>
@@ -834,7 +846,7 @@
                 <!-- Brand -->
                 <div class="col-span-2">
                     <a href="index.html" class="flex items-center gap-3 mb-4">
-                        <div class="seal !w-10 !h-10 !text-sm" aria-hidden="true">★</div>
+                        <img src="images/logo/mark.webp" alt="" class="w-10 h-10 rounded-full ring-1 ring-brass-400/40" width="1024" height="1024" loading="lazy" aria-hidden="true">
                         <span class="text-lg font-display text-brass-300">MSP Chauffeur Service</span>
                     </a>
                     <p class="text-lacquer-400 font-light mb-4 max-w-xs">

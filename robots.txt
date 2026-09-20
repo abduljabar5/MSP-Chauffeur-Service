@@ -4,4 +4,4 @@ Allow: /
 Disallow: /admin.html
 Disallow: /confirmation.html
 
-Sitemap: https://tcblackcar.com/sitemap.xml
+Sitemap: https://mspairportchauffeur.com/sitemap.xml

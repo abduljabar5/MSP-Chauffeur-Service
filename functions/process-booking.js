@@ -115,7 +115,7 @@ function htmlToText(html) {
 export async function processBooking(booking) {
   const OWNER_EMAIL = process.env.OWNER_EMAIL || 'tcblackcar@gmail.com'; // override via env
   const OWNER_PHONE = process.env.OWNER_PHONE || '+16126665004'; // dispatch line; override via env
-  const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'bookings@tcblackcar.com'; // must be on a domain verified in Resend
+  const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'bookings@mspairportchauffeur.com'; // must be on a domain verified in Resend
   const FROM_NAME = 'MSP Chauffeur Service';
   const TWILIO_FROM = process.env.TWILIO_FROM_NUMBER || '+16129991462'; // set TWILIO_FROM_NUMBER in env
 
@@ -143,6 +143,12 @@ export async function processBooking(booking) {
   const carSeatsTotal = booking.carSeatsTotal || carSeats * 25;
   const carSeatsLabel = carSeats === 1 ? '1 car seat' : `${carSeats} car seats`;
   const formattedCarSeats = '$' + carSeatsTotal;
+  const isHourly = booking.serviceType === 'hourly';
+  const hours = parseInt(booking.hours) || 0;
+  const stops = Array.isArray(booking.stops) ? booking.stops.filter(Boolean) : [];
+  const stopsFee = booking.stopsFee || stops.length * 15;
+  const formattedStopsFee = '$' + stopsFee;
+  const serviceLine = isHourly ? `Hourly service · ${hours} hours · as directed` : '';
 
   const pickupLink = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(booking.pickup);
   const dropoffLink = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(booking.dropoff);
@@ -160,36 +166,48 @@ export async function processBooking(booking) {
     const customerText = generateCustomerText(booking, formattedTotal, estimatedMinutes, isRoundTrip, returnDate, returnTime, hasMeetAndGreet, hasDiscount, formattedDiscount, promoCode);
     const ownerText = generateOwnerText(booking, formattedTotal, hasDiscount, formattedDiscount, promoCode, isRoundTrip, returnDate, returnTime, hasMeetAndGreet);
     const refId = booking.confirmationNumber || '';
-    try {
-      const r = await fetch('https://api.resend.com/emails/batch', {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify([
-          {
-            from: `${FROM_NAME} <${FROM_EMAIL}>`,
-            to: [booking.email],
-            reply_to: OWNER_EMAIL,
-            subject: `Your ride is confirmed — ${booking.confirmationNumber || booking.date}`,
-            html: customerHtml,
-            text: customerText,
-            headers: { 'X-Entity-Ref-ID': refId }
-          },
-          {
-            from: `${FROM_NAME} <${FROM_EMAIL}>`,
-            to: [OWNER_EMAIL],
-            reply_to: booking.email,
-            subject: `NEW BOOKING - ${booking.name} - ${booking.date}`,
-            html: ownerHtml,
-            text: ownerText,
-            headers: { 'X-Entity-Ref-ID': refId }
-          }
-        ])
-      });
-      return r.ok ? 'sent' : 'failed';
-    } catch (e) {
-      console.error('Email error:', e);
-      return 'error';
-    }
+    // Send the two emails as independent requests so a rejected customer address
+    // (or a Resend sandbox restriction) can never suppress the owner alert.
+    const sendOne = async (label, payload) => {
+      try {
+        const r = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!r.ok) {
+          console.error(`Resend ${label} email failed (${r.status}) from=${FROM_EMAIL} to=${payload.to}:`, await r.text());
+          return 'failed';
+        }
+        return 'sent';
+      } catch (e) {
+        console.error(`Resend ${label} email error:`, e);
+        return 'error';
+      }
+    };
+    const [customer, owner] = await Promise.all([
+      sendOne('customer', {
+        from: `${FROM_NAME} <${FROM_EMAIL}>`,
+        to: [booking.email],
+        reply_to: OWNER_EMAIL,
+        subject: `Your ride is confirmed — ${booking.confirmationNumber || booking.date}`,
+        html: customerHtml,
+        text: customerText,
+        headers: { 'X-Entity-Ref-ID': refId }
+      }),
+      sendOne('owner', {
+        from: `${FROM_NAME} <${FROM_EMAIL}>`,
+        to: [OWNER_EMAIL],
+        reply_to: booking.email,
+        subject: `NEW BOOKING - ${booking.name} - ${booking.date}`,
+        html: ownerHtml,
+        text: ownerText,
+        headers: { 'X-Entity-Ref-ID': refId }
+      })
+    ]);
+    if (customer === 'sent' && owner === 'sent') return 'sent';
+    if (customer !== 'sent' && owner !== 'sent') return customer === 'error' ? 'error' : 'failed';
+    return `partial (customer: ${customer}, owner: ${owner})`;
   };
 
   // ----------------------------------------
@@ -204,6 +222,8 @@ export async function processBooking(booking) {
     const returnLine = isRoundTrip && returnDate ? `\nRETURN: ${returnDate} at ${returnTime}` : '';
     const meetGreetLine = hasMeetAndGreet ? `\n👤 Meet & Greet included` : '';
     const carSeatLine = carSeats > 0 ? `\n🧒 ${carSeatsLabel} installed` : '';
+    const hourlyLine = isHourly ? `\n⏱ HOURLY: ${hours} hours, as directed` : '';
+    const stopsSmsLine = stops.length ? `\n📍 STOPS: ${stops.join(' → ')}` : '';
     const discountLine = hasDiscount ? `\nDiscount (${promoCode}): -${formattedDiscount}` : '';
     const customerSms = `MSP Chauffeur Service
 ━━━━━━━━━━━━━━━━━━
@@ -216,7 +236,7 @@ WHEN: ${booking.date} at ${booking.time}
 PICKUP: ${booking.pickup}
 
 DROPOFF: ${booking.dropoff}
-${roundTripLine}${returnLine}${meetGreetLine}${carSeatLine}${discountLine}
+${hourlyLine}${stopsSmsLine}${roundTripLine}${returnLine}${meetGreetLine}${carSeatLine}${discountLine}
 Total: ${formattedTotal}${booking.paymentMethod === 'online' ? ' (Paid)' : ''}
 
 Your driver will arrive on time.
@@ -227,9 +247,11 @@ Questions? (612) 666-5004`;
     const ownerReturnLine = isRoundTrip && returnDate ? `\n🔙 RETURN: ${returnDate} at ${returnTime}` : '';
     const ownerMeetGreetLine = hasMeetAndGreet ? `\n👤 MEET & GREET (+${formattedMeetAndGreet})` : '';
     const ownerCarSeatLine = carSeats > 0 ? `\n🧒 CAR SEATS: ${carSeats} (+${formattedCarSeats})` : '';
+    const ownerHourlyLine = isHourly ? `\n⏱ HOURLY: ${hours} HRS AS DIRECTED` : '';
+    const ownerStopsLine = stops.length ? `\n📍 STOPS (+${formattedStopsFee}): ${stops.join(' → ')}` : '';
     const ownerSms = `🚨 NEW BOOKING 🚨
 
-💰 FARE: ${formattedTotal}${ownerDiscountLine}${ownerRoundTripLine}${ownerMeetGreetLine}${ownerCarSeatLine}
+💰 FARE: ${formattedTotal}${ownerHourlyLine}${ownerStopsLine}${ownerDiscountLine}${ownerRoundTripLine}${ownerMeetGreetLine}${ownerCarSeatLine}
 🗓️ WHEN: ${booking.date} at ${booking.time}${ownerReturnLine}
 
 📍 PICKUP: ${booking.pickup}
@@ -378,7 +400,7 @@ Payment: ${booking.paymentMethod === 'online' ? 'Paid Online' : 'Cash'}${booking
   // We don't trigger when channels are 'skipped' (intentionally not configured).
   // ----------------------------------------
   let backupAlert = 'not_needed';
-  const ownerEmailDelivered = email === 'sent';
+  const ownerEmailDelivered = email === 'sent' || /owner: sent/.test(String(email));
   const ownerSmsDelivered = sms.owner === 'sent';
   const emailAttempted = email !== 'skipped';
   const smsAttempted = sms.owner !== 'skipped';
@@ -483,7 +505,9 @@ function generateCustomerText(booking, total, estimatedMinutes, isRoundTrip, ret
     ``,
     `Confirmation: ${booking.confirmationNumber || ''}`,
     `When: ${booking.date} at ${booking.time}`,
+    booking.serviceType === 'hourly' ? `Service: Hourly, ${booking.hours} hours as directed` : '',
     `Pickup: ${booking.pickup}`,
+    ...((Array.isArray(booking.stops) ? booking.stops : []).map((s, i) => `Stop ${i + 1}: ${s}`)),
     `Dropoff: ${booking.dropoff}`,
     isRoundTrip && returnDate ? `Return: ${returnDate} at ${returnTime}` : '',
     hasMeetAndGreet ? `Meet & Greet: included` : '',
@@ -502,7 +526,7 @@ function generateCustomerText(booking, total, estimatedMinutes, isRoundTrip, ret
     `Questions or changes? Call (612) 666-5004 or reply to this email.`,
     ``,
     `— MSP Chauffeur Service`,
-    `https://tcblackcar.com`
+    `https://mspairportchauffeur.com`
   ];
   return lines.filter(Boolean).join('\n');
 }
@@ -519,8 +543,11 @@ function generateOwnerText(booking, total, hasDiscount, discount, promoCode, isR
     ``,
     `When: ${booking.date} at ${booking.time}`,
     isRoundTrip && returnDate ? `Return: ${returnDate} at ${returnTime}` : '',
+    booking.serviceType === 'hourly' ? `Service: HOURLY — ${booking.hours} hours as directed` : '',
     `Pickup: ${booking.pickup}`,
+    ...((Array.isArray(booking.stops) ? booking.stops : []).map((s, i) => `Stop ${i + 1}: ${s}`)),
     `Dropoff: ${booking.dropoff}`,
+    (Array.isArray(booking.stops) && booking.stops.length) ? `Extra stops fee: $${booking.stopsFee || booking.stops.length * 15}` : '',
     ``,
     `Vehicle: ${booking.vehicle}`,
     `Passengers: ${booking.passengers || '1'}`,
@@ -531,7 +558,7 @@ function generateOwnerText(booking, total, hasDiscount, discount, promoCode, isR
     booking.flight ? `Flight: ${booking.flight}` : '',
     booking.notes ? `Notes: ${booking.notes}` : '',
     ``,
-    `Open in Admin: https://tcblackcar.com/admin.html?focus=${encodeURIComponent(booking.confirmationNumber || '')}`
+    `Open in Admin: https://mspairportchauffeur.com/admin.html?focus=${encodeURIComponent(booking.confirmationNumber || '')}`
   ];
   return lines.filter(Boolean).join('\n');
 }
@@ -604,9 +631,15 @@ function generateCustomerEmail(booking, total, baseFare, discount, tip, processi
                     <div style="color: #ffffff; font-size: 15px; line-height: 1.4; margin-bottom: 8px;">${booking.pickup}</div>
                     <a href="${pickupLink}" style="color: #D4AF37; font-size: 13px; text-decoration: underline;">Open in Maps →</a>
                 </div>
+                ${(Array.isArray(booking.stops) ? booking.stops : []).map((stop, i) => `
+                <div style="border-left: 2px dotted #D4AF37; height: 15px; margin-left: 5px;"></div>
+                <div style="margin-bottom: 15px;">
+                    <div style="color: #D4AF37; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">🔸 Stop ${i + 1}</div>
+                    <div style="color: #ffffff; font-size: 15px; line-height: 1.4;">${stop}</div>
+                </div>`).join('')}
                 <div style="border-left: 2px dotted #D4AF37; height: 15px; margin-left: 5px;"></div>
                 <div>
-                    <div style="color: #888; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">🏁 Dropoff Location</div>
+                    <div style="color: #888; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">🏁 ${booking.serviceType === 'hourly' ? 'Drop-off / As Directed' : 'Dropoff Location'}</div>
                     <div style="color: #ffffff; font-size: 15px; line-height: 1.4; margin-bottom: 8px;">${booking.dropoff}</div>
                     <a href="${dropoffLink}" style="color: #D4AF37; font-size: 13px; text-decoration: underline;">Open in Maps →</a>
                 </div>
@@ -653,6 +686,8 @@ function generateCustomerEmail(booking, total, baseFare, discount, tip, processi
                     ${isRoundTrip ? `<span style="font-size: 14px; margin-left: 20px;">Return: <strong>${baseFare}</strong></span>` : ''}
                     ${hasMeetAndGreet ? `<span style="font-size: 14px; margin-left: 20px;">Meet & Greet: <strong>${meetAndGreetPrice}</strong></span>` : ''}
                     ${(parseInt(booking.carSeats) || 0) > 0 ? `<span style="font-size: 14px; margin-left: 20px;">Car Seats × ${booking.carSeats}: <strong>$${booking.carSeatsTotal || parseInt(booking.carSeats) * 25}</strong></span>` : ''}
+                    ${(Array.isArray(booking.stops) && booking.stops.length) ? `<span style="font-size: 14px; margin-left: 20px;">Stops × ${booking.stops.length}: <strong>$${booking.stopsFee || booking.stops.length * 15}</strong></span>` : ''}
+                    ${booking.serviceType === 'hourly' ? `<span style="font-size: 14px; margin-left: 20px;">Hourly: <strong>${booking.hours} hrs</strong></span>` : ''}
                     ${hasTip ? `<span style="font-size: 14px; margin-left: 20px;">Tip: <strong>${tip}</strong></span>` : ''}
                     ${hasProcessingFee ? `<span style="font-size: 14px; margin-left: 20px;">Fee: <strong>${processingFee}</strong></span>` : ''}
                 </div>
@@ -697,7 +732,7 @@ function generateCustomerEmail(booking, total, baseFare, discount, tip, processi
         <div style="color: #D4AF37; font-size: 16px; font-weight: 600; margin-bottom: 5px;">MSP Chauffeur Service</div>
         <div style="color: #666; font-size: 12px;">Premium Transportation in the Twin Cities</div>
         <div style="margin-top: 15px;">
-            <a href="https://tcblackcar.com" style="color: #a0a0a0; font-size: 12px; text-decoration: none;">tcblackcar.com</a>
+            <a href="https://mspairportchauffeur.com" style="color: #a0a0a0; font-size: 12px; text-decoration: none;">mspairportchauffeur.com</a>
         </div>
     </div>
 </div>`;
@@ -716,11 +751,13 @@ function generateOwnerEmail(booking, total, baseFare, discount, tip, processingF
     <div style="background-color: #0d0d0d; padding: 35px 30px; text-align: center; border-bottom: 4px solid #D4AF37;">
         <div style="color: #888; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;">TOTAL EARNINGS</div>
         <div style="color: #D4AF37; font-size: 56px; font-weight: 900; letter-spacing: -1px;">${total}</div>
-        ${isRoundTrip || hasMeetAndGreet || (parseInt(booking.carSeats) || 0) > 0 ? `
+        ${isRoundTrip || hasMeetAndGreet || (parseInt(booking.carSeats) || 0) > 0 || booking.serviceType === 'hourly' || (Array.isArray(booking.stops) && booking.stops.length) ? `
         <div style="margin-top: 12px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
             ${isRoundTrip ? `<span style="background-color: #1a5f1a; padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: 600; color: #90EE90;">🔄 ROUND TRIP</span>` : ''}
             ${hasMeetAndGreet ? `<span style="background-color: #D4AF37; padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: 600; color: #0d0d0d;">👤 MEET & GREET</span>` : ''}
             ${(parseInt(booking.carSeats) || 0) > 0 ? `<span style="background-color: #D4AF37; padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: 600; color: #0d0d0d;">🧒 ${booking.carSeats} CAR SEAT${parseInt(booking.carSeats) > 1 ? 'S' : ''}</span>` : ''}
+            ${booking.serviceType === 'hourly' ? `<span style="background-color: #243f8f; padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: 600; color: #ffffff;">⏱ HOURLY · ${booking.hours} HRS</span>` : ''}
+            ${(Array.isArray(booking.stops) && booking.stops.length) ? `<span style="background-color: #D4AF37; padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: 600; color: #0d0d0d;">📍 ${booking.stops.length} STOP${booking.stops.length > 1 ? 'S' : ''}</span>` : ''}
         </div>` : ''}
         <div style="margin-top: 18px; padding-top: 18px; border-top: 1px solid #333;">
             <span style="color: #888; font-size: 15px;">Base: <strong style="color: #ffffff;">${baseFare}</strong></span>
@@ -728,6 +765,7 @@ function generateOwnerEmail(booking, total, baseFare, discount, tip, processingF
             ${isRoundTrip && parseFloat(String(roundTripDiscount).replace('$','')) > 0 ? `<span style="color: #888; font-size: 15px; margin-left: 25px;">RT Savings: <strong style="color: #90EE90;">-${roundTripDiscount}</strong></span>` : ''}
             ${hasMeetAndGreet ? `<span style="color: #888; font-size: 15px; margin-left: 25px;">Meet & Greet: <strong style="color: #D4AF37;">${meetAndGreetPrice}</strong></span>` : ''}
             ${(parseInt(booking.carSeats) || 0) > 0 ? `<span style="color: #888; font-size: 15px; margin-left: 25px;">Car Seats × ${booking.carSeats}: <strong style="color: #D4AF37;">$${booking.carSeatsTotal || parseInt(booking.carSeats) * 25}</strong></span>` : ''}
+            ${(Array.isArray(booking.stops) && booking.stops.length) ? `<span style="color: #888; font-size: 15px; margin-left: 25px;">Stops × ${booking.stops.length}: <strong style="color: #D4AF37;">$${booking.stopsFee || booking.stops.length * 15}</strong></span>` : ''}
             ${hasDiscount ? `<span style="color: #888; font-size: 15px; margin-left: 25px;">Discount: <strong style="color: #ff6b6b;">-${discount}</strong></span>` : ''}
             ${hasTip ? `<span style="color: #888; font-size: 15px; margin-left: 25px;">Tip: <strong style="color: #D4AF37;">${tip}</strong></span>` : ''}
             ${hasProcessingFee ? `<span style="color: #888; font-size: 15px; margin-left: 25px;">Fee: <strong style="color: #888;">${processingFee}</strong></span>` : ''}
@@ -782,10 +820,16 @@ function generateOwnerEmail(booking, total, baseFare, discount, tip, processingF
                 <a href="${pickupLink}" style="display: inline-block; background-color: #D4AF37; color: #0d0d0d; padding: 8px 15px; border-radius: 5px; font-size: 13px; font-weight: 600; text-decoration: none;">Open in Maps</a>
             </div>
 
+            ${(Array.isArray(booking.stops) ? booking.stops : []).map((stop, i) => `
+            <div style="border-left: 2px dashed #D4AF37; height: 20px; margin-left: 6px;"></div>
+            <div style="margin-bottom: 15px;">
+                <div style="color: #D4AF37; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">🔸 STOP ${i + 1}</div>
+                <div style="color: #ffffff; font-size: 16px; line-height: 1.4;">${stop}</div>
+            </div>`).join('')}
             <div style="border-left: 2px dashed #D4AF37; height: 20px; margin-left: 6px;"></div>
 
             <div>
-                <div style="color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">🏁 DROPOFF</div>
+                <div style="color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">🏁 ${booking.serviceType === 'hourly' ? 'DROP-OFF / AS DIRECTED' : 'DROPOFF'}</div>
                 <div style="color: #ffffff; font-size: 16px; line-height: 1.4; margin-bottom: 8px;">${booking.dropoff}</div>
                 <a href="${dropoffLink}" style="display: inline-block; background-color: #D4AF37; color: #0d0d0d; padding: 8px 15px; border-radius: 5px; font-size: 13px; font-weight: 600; text-decoration: none;">Open in Maps</a>
             </div>
@@ -810,7 +854,7 @@ function generateOwnerEmail(booking, total, baseFare, discount, tip, processingF
         <div style="text-align: center; padding: 20px 0;">
             <a href="tel:${booking.phone}" style="display: inline-block; background: linear-gradient(135deg, #D4AF37 0%, #b8962e 100%); color: #0d0d0d; padding: 18px 45px; text-decoration: none; border-radius: 30px; font-weight: 800; font-size: 18px; margin-bottom: 12px;">📞 CALL NOW</a>
             <div style="margin-top: 14px;">
-                <a href="https://tcblackcar.com/admin.html?focus=${encodeURIComponent(booking.confirmationNumber || '')}" style="display: inline-block; background-color: transparent; color: #D4AF37; padding: 12px 24px; text-decoration: none; border: 1px solid rgba(212, 175, 55, 0.4); border-radius: 25px; font-weight: 600; font-size: 13px;">Open in Admin →</a>
+                <a href="https://mspairportchauffeur.com/admin.html?focus=${encodeURIComponent(booking.confirmationNumber || '')}" style="display: inline-block; background-color: transparent; color: #D4AF37; padding: 12px 24px; text-decoration: none; border: 1px solid rgba(212, 175, 55, 0.4); border-radius: 25px; font-weight: 600; font-size: 13px;">Open in Admin →</a>
             </div>
         </div>
     </div>
@@ -887,7 +931,7 @@ function generateReviewEmail(booking) {
         </div>
         <div style="text-align: center; padding: 25px 0; border-top: 1px solid #333; margin-top: 25px;">
             <div style="color: #ffffff; font-size: 15px; margin-bottom: 5px;">Book your next ride</div>
-            <a href="https://tcblackcar.com/book-a-ride.html" style="color: #D4AF37; font-size: 16px; font-weight: 700; text-decoration: none;">tcblackcar.com</a>
+            <a href="https://mspairportchauffeur.com/book-a-ride.html" style="color: #D4AF37; font-size: 16px; font-weight: 700; text-decoration: none;">mspairportchauffeur.com</a>
         </div>
     </div>
     <div style="background-color: #1a1a1a; padding: 20px; text-align: center; border-top: 1px solid #333;">

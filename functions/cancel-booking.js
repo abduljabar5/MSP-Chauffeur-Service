@@ -8,7 +8,7 @@ import { getStore } from '@netlify/blobs';
 
 const OWNER_EMAIL = process.env.OWNER_EMAIL || 'tcblackcar@gmail.com'; // override via env
 const OWNER_PHONE = process.env.OWNER_PHONE || '+16126665004'; // dispatch line; override via env
-const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'bookings@tcblackcar.com'; // must be on a domain verified in Resend
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'bookings@mspairportchauffeur.com'; // must be on a domain verified in Resend
 const FROM_NAME = 'MSP Chauffeur Service';
 const TWILIO_FROM = process.env.TWILIO_FROM_NUMBER || '+16129991462'; // set TWILIO_FROM_NUMBER in env
 

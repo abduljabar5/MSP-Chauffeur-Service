@@ -31,6 +31,9 @@ export const handler = async (event) => {
     if (booking.roundTrip) upsellParts.push('Round Trip');
     if (booking.meetAndGreet) upsellParts.push('Meet & Greet');
     if (booking.carSeats > 0) upsellParts.push(`${booking.carSeats} Car Seat${booking.carSeats > 1 ? 's' : ''}`);
+    const stopsList = Array.isArray(booking.stops) ? booking.stops.filter(Boolean) : [];
+    if (stopsList.length) upsellParts.push(`${stopsList.length} Extra Stop${stopsList.length > 1 ? 's' : ''}`);
+    const isHourly = booking.serviceType === 'hourly';
     const upsellText = upsellParts.length ? ` (${upsellParts.join(', ')})` : '';
 
     // Create Stripe Checkout Session
@@ -39,7 +42,7 @@ export const handler = async (event) => {
         price_data: {
           currency: 'usd',
           product_data: {
-            name: `${booking.vehicle || 'Sedan'} - Airport Transfer${upsellText}`,
+            name: `${booking.vehicle || 'Sedan'} - ${isHourly ? `Hourly Service (${booking.hours} hrs)` : 'Airport Transfer'}${upsellText}`,
             description: `${booking.pickup} → ${booking.dropoff} on ${booking.date} at ${booking.time}`,
           },
           unit_amount: booking.amount, // Amount in cents
@@ -72,6 +75,11 @@ export const handler = async (event) => {
         meetAndGreetPrice: String(booking.meetAndGreetPrice ?? 0),
         carSeats: String(booking.carSeats ?? 0),
         carSeatsTotal: String(booking.carSeatsTotal ?? 0),
+        serviceType: isHourly ? 'hourly' : 'transfer',
+        hours: String(booking.hours ?? 0),
+        stops: stopsList.join(' | ').slice(0, 490),
+        stopsFee: String(booking.stopsFee ?? 0),
+        tipType: booking.tipType || 'percent',
         discount: String(booking.discount ?? 0),
         promoCode: booking.promoCode || '',
         tip: String(booking.tip ?? 0),

@@ -1,5 +1,5 @@
 /* Shared Tailwind CDN config — load immediately after cdn.tailwindcss.com
-   Palette: black + gold + sapphire blue. Cream paper tones, brass hairlines, blue CTAs. */
+   Palette: black + gold + navy. Cream paper tones, brass hairlines, deep navy CTAs. */
 tailwind.config = {
     theme: {
         extend: {
@@ -19,15 +19,15 @@ tailwind.config = {
                     900: '#111317',
                     950: '#0a0b0e',
                 },
-                // "oxblood" (legacy name) — the house blue: sapphire CTAs that pop on black
+                // "oxblood" (legacy name) — the house navy: deep blue CTAs and accents
                 oxblood: {
-                    300: '#8fb3ff',
-                    400: '#5b8cff',
-                    500: '#2f6bff',
-                    600: '#2455d6',
-                    700: '#1b41a8',
-                    800: '#142e78',
-                    900: '#0d1d4d',
+                    300: '#9db4e6',
+                    400: '#5b78c0',
+                    500: '#243f8f',
+                    600: '#1b3170',
+                    700: '#142553',
+                    800: '#0f1b3d',
+                    900: '#0a1228',
                 },
                 // Ivory / cream — paper tones
                 ivory: {
