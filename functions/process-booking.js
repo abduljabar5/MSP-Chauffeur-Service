@@ -270,7 +270,7 @@ Payment: ${booking.paymentMethod === 'online' ? 'Paid Online' : 'Cash'}${booking
     const sendSms = (to, body) => fetch(twilioUrl, {
       method: 'POST',
       headers: { 'Authorization': `Basic ${twilioAuth}`, 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({ From: TWILIO_FROM, To: to, Body: body })
+      body: new URLSearchParams({ From: TWILIO_FROM, To: to, Body: body, ...(process.env.TWILIO_MESSAGING_SERVICE_SID ? { MessagingServiceSid: process.env.TWILIO_MESSAGING_SERVICE_SID } : {}) })
     });
 
     try {

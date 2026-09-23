@@ -240,7 +240,7 @@ export default async (req, context) => {
       const r = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${process.env.TWILIO_ACCOUNT_SID}/Messages.json`, {
         method: 'POST',
         headers: { 'Authorization': `Basic ${auth}`, 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ From: TWILIO_FROM, To: customerPhone, Body: body })
+        body: new URLSearchParams({ From: TWILIO_FROM, To: customerPhone, Body: body, ...(process.env.TWILIO_MESSAGING_SERVICE_SID ? { MessagingServiceSid: process.env.TWILIO_MESSAGING_SERVICE_SID } : {}) })
       });
       return r.ok ? 'sent' : 'failed';
     } catch (e) { console.error('Customer cancel SMS error:', e); return 'error'; }
@@ -254,7 +254,7 @@ export default async (req, context) => {
       const r = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${process.env.TWILIO_ACCOUNT_SID}/Messages.json`, {
         method: 'POST',
         headers: { 'Authorization': `Basic ${auth}`, 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ From: TWILIO_FROM, To: OWNER_PHONE, Body: body })
+        body: new URLSearchParams({ From: TWILIO_FROM, To: OWNER_PHONE, Body: body, ...(process.env.TWILIO_MESSAGING_SERVICE_SID ? { MessagingServiceSid: process.env.TWILIO_MESSAGING_SERVICE_SID } : {}) })
       });
       return r.ok ? 'sent' : 'failed';
     } catch (e) { console.error('Owner cancel SMS error:', e); return 'error'; }
