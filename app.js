@@ -11,7 +11,7 @@ const CONFIG = {
     // Pricing rates — first 7 miles included in base fare, then per-mile.
     // TC Black Car fleet: adjust rates here in one place.
     rates: {
-        sedan:    { base: 60.00,  min: 65.00,  perMile: 3.30, hourly: 75  },  // Mercedes / Lincoln — 1-3 passengers, 4 bags
+        sedan:    { base: 60.00,  min: 65.00,  perMile: 3.30, hourly: 75  },  // Lincoln Continental — 1-3 passengers, 4 bags
         suv:      { base: 75.00,  min: 80.00,  perMile: 3.60, hourly: 90  },  // GMC Yukon Denali — 1-6 passengers, 6 bags
         escalade: { base: 90.00,  min: 95.00,  perMile: 3.80, hourly: 110 },  // Cadillac Escalade — 1-6 passengers, 6 bags
         van:      { base: 110.00, min: 120.00, perMile: 3.90, hourly: 130 }   // Mercedes Sprinter — 1-10 passengers, 10 bags
