@@ -558,7 +558,7 @@ function generateOwnerText(booking, total, hasDiscount, discount, promoCode, isR
     booking.flight ? `Flight: ${booking.flight}` : '',
     booking.notes ? `Notes: ${booking.notes}` : '',
     ``,
-    `Open in Admin: https://mspairportchauffeur.com/admin.html?focus=${encodeURIComponent(booking.confirmationNumber || '')}`
+    `Open in Admin: https://mspairportchauffeur.com/admin.html?focus=${encodeURIComponent(booking.confirmationNumber || '')}${process.env.CANCEL_ADMIN_TOKEN ? `&token=${encodeURIComponent(process.env.CANCEL_ADMIN_TOKEN)}` : ''}`
   ];
   return lines.filter(Boolean).join('\n');
 }
@@ -854,7 +854,7 @@ function generateOwnerEmail(booking, total, baseFare, discount, tip, processingF
         <div style="text-align: center; padding: 20px 0;">
             <a href="tel:${booking.phone}" style="display: inline-block; background: linear-gradient(135deg, #D4AF37 0%, #b8962e 100%); color: #0d0d0d; padding: 18px 45px; text-decoration: none; border-radius: 30px; font-weight: 800; font-size: 18px; margin-bottom: 12px;">📞 CALL NOW</a>
             <div style="margin-top: 14px;">
-                <a href="https://mspairportchauffeur.com/admin.html?focus=${encodeURIComponent(booking.confirmationNumber || '')}" style="display: inline-block; background-color: transparent; color: #D4AF37; padding: 12px 24px; text-decoration: none; border: 1px solid rgba(212, 175, 55, 0.4); border-radius: 25px; font-weight: 600; font-size: 13px;">Open in Admin →</a>
+                <a href="https://mspairportchauffeur.com/admin.html?focus=${encodeURIComponent(booking.confirmationNumber || '')}${process.env.CANCEL_ADMIN_TOKEN ? `&token=${encodeURIComponent(process.env.CANCEL_ADMIN_TOKEN)}` : ''}" style="display: inline-block; background-color: transparent; color: #D4AF37; padding: 12px 24px; text-decoration: none; border: 1px solid rgba(212, 175, 55, 0.4); border-radius: 25px; font-weight: 600; font-size: 13px;">Open in Admin →</a>
             </div>
         </div>
     </div>
