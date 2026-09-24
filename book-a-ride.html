@@ -991,7 +991,7 @@
                 hours: 3,
                 stops: [],
                 stopFee: 15,
-                maxStops: 3,
+                maxStops: 25, // unlimited in practice; Google routes up to 25 waypoints
                 customTip: 0,
                 name: '',
                 email: '',
@@ -2079,7 +2079,7 @@
             if (!btn) return;
             const n = booking.data.stops.length;
             btn.classList.toggle('hidden', n >= booking.data.maxStops);
-            if (label) label.textContent = n === 0 ? 'Add a stop · +$15 each' : `Add another stop · +$15 each (${booking.data.maxStops - n} left)`;
+            if (label) label.textContent = n === 0 ? 'Add a stop · +$15 each' : 'Add another stop · +$15 each';
         }
 
         function attachStopAutocomplete(input, row) {

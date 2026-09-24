@@ -67,7 +67,7 @@ export default async (req, context) => {
     carSeatsTotal: parseFloat(m.carSeatsTotal) || 0,
     serviceType: m.serviceType || 'transfer',
     hours: parseInt(m.hours) || 0,
-    stops: m.stops ? m.stops.split(' | ').filter(Boolean) : [],
+    stops: (() => { let j = m.stops || ''; for (let i = 2; m[`stops${i}`]; i++) j += m[`stops${i}`]; return j ? j.split(' | ').filter(Boolean) : []; })(),
     stopsFee: parseFloat(m.stopsFee) || 0,
     tipType: m.tipType || 'percent',
     discount: parseFloat(m.discount) || 0,

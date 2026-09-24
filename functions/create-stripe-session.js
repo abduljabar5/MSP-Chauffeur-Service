@@ -34,6 +34,13 @@ export const handler = async (event) => {
     const stopsList = Array.isArray(booking.stops) ? booking.stops.filter(Boolean) : [];
     if (stopsList.length) upsellParts.push(`${stopsList.length} Extra Stop${stopsList.length > 1 ? 's' : ''}`);
     const isHourly = booking.serviceType === 'hourly';
+    // Stripe caps each metadata value at 500 chars; chunk the stop list into stops, stops2, stops3…
+    const stopsMetadata = (list) => {
+      const joined = list.join(' | ');
+      const out = {};
+      for (let i = 0; i * 480 < joined.length; i++) out[i === 0 ? 'stops' : `stops${i + 1}`] = joined.slice(i * 480, (i + 1) * 480);
+      return out;
+    };
     const upsellText = upsellParts.length ? ` (${upsellParts.join(', ')})` : '';
 
     // Create Stripe Checkout Session
@@ -77,7 +84,7 @@ export const handler = async (event) => {
         carSeatsTotal: String(booking.carSeatsTotal ?? 0),
         serviceType: isHourly ? 'hourly' : 'transfer',
         hours: String(booking.hours ?? 0),
-        stops: stopsList.join(' | ').slice(0, 490),
+        ...stopsMetadata(stopsList),
         stopsFee: String(booking.stopsFee ?? 0),
         tipType: booking.tipType || 'percent',
         discount: String(booking.discount ?? 0),

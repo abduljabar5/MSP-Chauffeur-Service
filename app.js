@@ -24,8 +24,8 @@ const CONFIG = {
         nightSurcharge: 20.00, // 7 PM – 6 AM
         meetAndGreet: 15.00,   // chauffeur meets you inside baggage claim
         childSeat: 25.00,      // per installed child safety seat (max 4)
-        stop: 15.00,           // per extra stop en route (max 3); mileage is routed through the stops
-        maxStops: 3
+        stop: 15.00,           // per extra stop en route; mileage is routed through the stops
+        maxStops: 25           // unlimited in practice — 25 is Google Directions' waypoint ceiling per route
     },
     vehicleNames: {
         sedan: 'Sedan',
