@@ -16,7 +16,7 @@ export const handler = async (event) => {
     }
 
     // Generate confirmation number
-    const confirmationNumber = 'TCB-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+    const confirmationNumber = 'MSP-' + Math.random().toString(36).substr(2, 6).toUpperCase();
 
     // Build success URL with booking data for confirmation page
     const bookingParams = new URLSearchParams({
@@ -89,7 +89,7 @@ export const handler = async (event) => {
         processingFee: String(booking.processingFee ?? 0)
       },
       payment_intent_data: {
-        description: `TCB Booking: ${booking.name} - ${booking.date}`,
+        description: `MSP Chauffeur Service booking: ${booking.name} - ${booking.date}`,
         metadata: {
           confirmationNumber,
           customer: booking.name,

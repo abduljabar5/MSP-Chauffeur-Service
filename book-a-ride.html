@@ -958,7 +958,7 @@
             <p class="text-lacquer-300 font-light mb-6">Your reservation has been successfully placed. Check your email for confirmation details.</p>
             <div class="bg-lacquer-800/60 border border-brass-400/20 rounded-sm p-4 mb-6 text-left">
                 <div class="text-xs text-lacquer-400 uppercase tracking-plate mb-1">Confirmation #</div>
-                <div class="text-xl font-mono font-semibold text-brass-300" id="confirmation-number">TCB-XXXX</div>
+                <div class="text-xl font-mono font-semibold text-brass-300" id="confirmation-number">MSP-XXXX</div>
             </div>
             <a href="index.html" class="btn-carmine inline-flex !py-3 !px-8">
                 Back to Home
@@ -2528,7 +2528,7 @@
                     }
                 } else {
                     // PAY DRIVER — process booking directly
-                    const confirmationNumber = 'TCB-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+                    const confirmationNumber = 'MSP-' + Math.random().toString(36).substr(2, 6).toUpperCase();
                     bookingPayload.confirmationNumber = confirmationNumber;
 
                     // If the function fails, do NOT redirect — the customer would see

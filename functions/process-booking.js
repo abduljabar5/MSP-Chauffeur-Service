@@ -413,18 +413,18 @@ Payment: ${booking.paymentMethod === 'online' ? 'Paid Online' : 'Cash'}${booking
   <h2 style="color: #b91c1c; margin-bottom: 8px;">⚠️ Booking notification failure</h2>
   <p>The booking below was confirmed (and charged, if online) but <strong>both the primary owner email and SMS failed to deliver</strong>. Customer notifications may have succeeded — see the function logs for details.</p>
   <table style="border-collapse: collapse; margin-top: 16px; font-size: 14px;">
-    <tr><td style="padding: 4px 12px 4px 0; color: #555;">Confirmation:</td><td><strong>${booking.confirmationNumber || '(none)'}</strong></td></tr>
-    <tr><td style="padding: 4px 12px 4px 0; color: #555;">Name:</td><td>${booking.name || ''}</td></tr>
-    <tr><td style="padding: 4px 12px 4px 0; color: #555;">Phone:</td><td><a href="tel:${booking.phone}">${booking.phone || ''}</a></td></tr>
-    <tr><td style="padding: 4px 12px 4px 0; color: #555;">Email:</td><td>${booking.email || ''}</td></tr>
-    <tr><td style="padding: 4px 12px 4px 0; color: #555;">Date / Time:</td><td>${booking.date || ''} at ${booking.time || ''}</td></tr>
-    <tr><td style="padding: 4px 12px 4px 0; color: #555;">Pickup:</td><td>${booking.pickup || ''}</td></tr>
-    <tr><td style="padding: 4px 12px 4px 0; color: #555;">Dropoff:</td><td>${booking.dropoff || ''}</td></tr>
-    <tr><td style="padding: 4px 12px 4px 0; color: #555;">Vehicle:</td><td>${booking.vehicle || ''}</td></tr>
-    <tr><td style="padding: 4px 12px 4px 0; color: #555;">Total:</td><td>$${booking.total || 0}</td></tr>
-    <tr><td style="padding: 4px 12px 4px 0; color: #555;">Payment:</td><td>${booking.paymentMethod === 'online' ? 'Paid Online' : 'Pay Driver'}</td></tr>
+    <tr><td style="padding: 4px 12px 4px 0; color: #6b7284;">Confirmation:</td><td><strong>${booking.confirmationNumber || '(none)'}</strong></td></tr>
+    <tr><td style="padding: 4px 12px 4px 0; color: #6b7284;">Name:</td><td>${booking.name || ''}</td></tr>
+    <tr><td style="padding: 4px 12px 4px 0; color: #6b7284;">Phone:</td><td><a href="tel:${booking.phone}">${booking.phone || ''}</a></td></tr>
+    <tr><td style="padding: 4px 12px 4px 0; color: #6b7284;">Email:</td><td>${booking.email || ''}</td></tr>
+    <tr><td style="padding: 4px 12px 4px 0; color: #6b7284;">Date / Time:</td><td>${booking.date || ''} at ${booking.time || ''}</td></tr>
+    <tr><td style="padding: 4px 12px 4px 0; color: #6b7284;">Pickup:</td><td>${booking.pickup || ''}</td></tr>
+    <tr><td style="padding: 4px 12px 4px 0; color: #6b7284;">Dropoff:</td><td>${booking.dropoff || ''}</td></tr>
+    <tr><td style="padding: 4px 12px 4px 0; color: #6b7284;">Vehicle:</td><td>${booking.vehicle || ''}</td></tr>
+    <tr><td style="padding: 4px 12px 4px 0; color: #6b7284;">Total:</td><td>$${booking.total || 0}</td></tr>
+    <tr><td style="padding: 4px 12px 4px 0; color: #6b7284;">Payment:</td><td>${booking.paymentMethod === 'online' ? 'Paid Online' : 'Pay Driver'}</td></tr>
   </table>
-  <p style="margin-top: 16px; color: #555; font-size: 13px;">Delivery results — email: ${email}, owner SMS: ${sms.owner}. Check Netlify function logs for the underlying errors.</p>
+  <p style="margin-top: 16px; color: #6b7284; font-size: 13px;">Delivery results — email: ${email}, owner SMS: ${sms.owner}. Check Netlify function logs for the underlying errors.</p>
 </div>`;
       const r = await fetch('https://api.resend.com/emails', {
         method: 'POST',
@@ -570,56 +570,58 @@ function generateCustomerEmail(booking, total, baseFare, discount, tip, processi
     : `~${Math.floor(estimatedMinutes/60)}h ${estimatedMinutes % 60}m`;
 
   return `
-<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0d0d0d;">
+<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0a0b0e;">
 
     <!-- HEADER -->
-    <div style="background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%); padding: 40px 30px; text-align: center; border-bottom: 2px solid #D4AF37;">
-        <div style="color: #D4AF37; font-size: 28px; font-weight: 700; letter-spacing: 2px; margin-bottom: 10px;">MSP Chauffeur Service</div>
-        <div style="color: #ffffff; font-size: 18px; font-weight: 400;">Booking Confirmed</div>
+    <div style="background: linear-gradient(135deg, #171a1f 0%, #0a0b0e 100%); padding: 40px 30px; text-align: center; border-bottom: 2px solid #d9b96a;">
+        <img src="https://mspairportchauffeur.com/images/logo/mark-512.png" width="72" height="72" alt="MSP Chauffeur Service" style="display: block; margin: 0 auto 14px; width: 72px; height: 72px; border-radius: 50%; border: 1px solid rgba(193,154,63,0.5);">
+        <div style="color: #d9b96a; font-family: Georgia, 'Times New Roman', serif; font-size: 26px; font-weight: 400; letter-spacing: 1px; margin-bottom: 4px;">MSP Chauffeur Service</div>
+        <div style="color: #a3a9b8; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 10px;">Black Car &middot; MSP</div>
+        <div style="color: #f7f1e3; font-size: 18px; font-weight: 400;">Booking Confirmed</div>
     </div>
 
     <!-- CONFIRMATION BADGE -->
-    <div style="background-color: #1a1a1a; padding: 20px; text-align: center; border-bottom: 1px solid #333;">
-        <div style="color: #888; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">✓ Confirmation Number</div>
-        <div style="color: #D4AF37; font-size: 24px; font-weight: 700; margin-top: 5px;">${booking.confirmationNumber}</div>
+    <div style="background-color: #171a1f; padding: 20px; text-align: center; border-bottom: 1px solid #2a2e36;">
+        <div style="color: #a3a9b8; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">✓ Confirmation Number</div>
+        <div style="color: #d9b96a; font-size: 24px; font-weight: 700; margin-top: 5px;">${booking.confirmationNumber}</div>
     </div>
 
     <!-- MAIN CONTENT -->
-    <div style="padding: 30px; color: #ffffff;">
+    <div style="padding: 30px; color: #f7f1e3;">
 
         <!-- GREETING -->
         <div style="margin-bottom: 30px;">
-            <div style="font-size: 22px; font-weight: 600; color: #ffffff; margin-bottom: 10px;">Dear ${booking.name},</div>
-            <div style="color: #a0a0a0; font-size: 15px; line-height: 1.6;">Thank you for choosing MSP Chauffeur Service. Your premium transportation has been confirmed and your driver will be ready at the scheduled time.</div>
+            <div style="font-size: 22px; font-weight: 600; color: #f7f1e3; margin-bottom: 10px;">Dear ${booking.name},</div>
+            <div style="color: #a3a9b8; font-size: 15px; line-height: 1.6;">Thank you for choosing MSP Chauffeur Service. Your premium transportation has been confirmed and your driver will be ready at the scheduled time.</div>
         </div>
 
         <!-- TRIP AT A GLANCE -->
-        <div style="background-color: #1a1a1a; border-radius: 12px; padding: 25px; margin-bottom: 25px; border: 1px solid #333;">
-            <div style="color: #D4AF37; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px;">Trip Details</div>
+        <div style="background-color: #171a1f; border-radius: 12px; padding: 25px; margin-bottom: 25px; border: 1px solid #2a2e36;">
+            <div style="color: #d9b96a; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px;">Trip Details</div>
 
             <!-- DATE & TIME -->
-            <div style="display: table; width: 100%; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #333;">
+            <div style="display: table; width: 100%; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #2a2e36;">
                 <div style="display: table-cell; width: 50%;">
-                    <div style="color: #a0a0a0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Date</div>
-                    <div style="color: #ffffff; font-size: 18px; font-weight: 600; margin-top: 5px;">${booking.date}</div>
+                    <div style="color: #a3a9b8; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Date</div>
+                    <div style="color: #f7f1e3; font-size: 18px; font-weight: 600; margin-top: 5px;">${booking.date}</div>
                 </div>
                 <div style="display: table-cell; width: 50%;">
-                    <div style="color: #a0a0a0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Pickup Time</div>
-                    <div style="color: #D4AF37; font-size: 18px; font-weight: 600; margin-top: 5px;">${booking.time}</div>
+                    <div style="color: #a3a9b8; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Pickup Time</div>
+                    <div style="color: #d9b96a; font-size: 18px; font-weight: 600; margin-top: 5px;">${booking.time}</div>
                 </div>
             </div>
             ${isRoundTrip && returnDate ? `
             <!-- RETURN DATE & TIME -->
-            <div style="display: table; width: 100%; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #333; background: rgba(212, 175, 55, 0.05); border-radius: 8px; padding: 15px;">
-                <div style="color: #D4AF37; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">🔄 Return Trip</div>
+            <div style="display: table; width: 100%; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #2a2e36; background: rgba(212, 175, 55, 0.05); border-radius: 8px; padding: 15px;">
+                <div style="color: #d9b96a; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">🔄 Return Trip</div>
                 <div style="display: table; width: 100%;">
                     <div style="display: table-cell; width: 50%;">
-                        <div style="color: #a0a0a0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Return Date</div>
-                        <div style="color: #ffffff; font-size: 16px; font-weight: 600; margin-top: 5px;">${returnDate}</div>
+                        <div style="color: #a3a9b8; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Return Date</div>
+                        <div style="color: #f7f1e3; font-size: 16px; font-weight: 600; margin-top: 5px;">${returnDate}</div>
                     </div>
                     <div style="display: table-cell; width: 50%;">
-                        <div style="color: #a0a0a0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Return Time</div>
-                        <div style="color: #D4AF37; font-size: 16px; font-weight: 600; margin-top: 5px;">${returnTime}</div>
+                        <div style="color: #a3a9b8; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Return Time</div>
+                        <div style="color: #d9b96a; font-size: 16px; font-weight: 600; margin-top: 5px;">${returnTime}</div>
                     </div>
                 </div>
             </div>` : ''}
@@ -627,35 +629,35 @@ function generateCustomerEmail(booking, total, baseFare, discount, tip, processi
             <!-- ROUTE -->
             <div style="margin-bottom: 20px;">
                 <div style="margin-bottom: 15px;">
-                    <div style="color: #D4AF37; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">📍 Pickup Location</div>
-                    <div style="color: #ffffff; font-size: 15px; line-height: 1.4; margin-bottom: 8px;">${booking.pickup}</div>
-                    <a href="${pickupLink}" style="color: #D4AF37; font-size: 13px; text-decoration: underline;">Open in Maps →</a>
+                    <div style="color: #d9b96a; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">📍 Pickup Location</div>
+                    <div style="color: #f7f1e3; font-size: 15px; line-height: 1.4; margin-bottom: 8px;">${booking.pickup}</div>
+                    <a href="${pickupLink}" style="color: #d9b96a; font-size: 13px; text-decoration: underline;">Open in Maps →</a>
                 </div>
                 ${(Array.isArray(booking.stops) ? booking.stops : []).map((stop, i) => `
-                <div style="border-left: 2px dotted #D4AF37; height: 15px; margin-left: 5px;"></div>
+                <div style="border-left: 2px dotted #d9b96a; height: 15px; margin-left: 5px;"></div>
                 <div style="margin-bottom: 15px;">
-                    <div style="color: #D4AF37; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">🔸 Stop ${i + 1}</div>
-                    <div style="color: #ffffff; font-size: 15px; line-height: 1.4;">${stop}</div>
+                    <div style="color: #d9b96a; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">🔸 Stop ${i + 1}</div>
+                    <div style="color: #f7f1e3; font-size: 15px; line-height: 1.4;">${stop}</div>
                 </div>`).join('')}
-                <div style="border-left: 2px dotted #D4AF37; height: 15px; margin-left: 5px;"></div>
+                <div style="border-left: 2px dotted #d9b96a; height: 15px; margin-left: 5px;"></div>
                 <div>
-                    <div style="color: #888; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">🏁 ${booking.serviceType === 'hourly' ? 'Drop-off / As Directed' : 'Dropoff Location'}</div>
-                    <div style="color: #ffffff; font-size: 15px; line-height: 1.4; margin-bottom: 8px;">${booking.dropoff}</div>
-                    <a href="${dropoffLink}" style="color: #D4AF37; font-size: 13px; text-decoration: underline;">Open in Maps →</a>
+                    <div style="color: #a3a9b8; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">🏁 ${booking.serviceType === 'hourly' ? 'Drop-off / As Directed' : 'Dropoff Location'}</div>
+                    <div style="color: #f7f1e3; font-size: 15px; line-height: 1.4; margin-bottom: 8px;">${booking.dropoff}</div>
+                    <a href="${dropoffLink}" style="color: #d9b96a; font-size: 13px; text-decoration: underline;">Open in Maps →</a>
                 </div>
             </div>
 
             <!-- DISTANCE & DURATION -->
-            <div style="background-color: #0d0d0d; padding: 15px; border-radius: 8px; overflow: hidden;">
+            <div style="background-color: #0a0b0e; padding: 15px; border-radius: 8px; overflow: hidden;">
                 <table style="width: 100%; border-collapse: collapse;">
                     <tr>
-                        <td style="width: 50%; text-align: center; border-right: 1px solid #333; padding: 5px;">
-                            <div style="color: #D4AF37; font-size: 20px; font-weight: 700;">${distance} mi</div>
-                            <div style="color: #a0a0a0; font-size: 11px; text-transform: uppercase;">Distance</div>
+                        <td style="width: 50%; text-align: center; border-right: 1px solid #2a2e36; padding: 5px;">
+                            <div style="color: #d9b96a; font-size: 20px; font-weight: 700;">${distance} mi</div>
+                            <div style="color: #a3a9b8; font-size: 11px; text-transform: uppercase;">Distance</div>
                         </td>
                         <td style="width: 50%; text-align: center; padding: 5px;">
-                            <div style="color: #D4AF37; font-size: 20px; font-weight: 700;">${durationText}</div>
-                            <div style="color: #a0a0a0; font-size: 11px; text-transform: uppercase;">Est. Duration</div>
+                            <div style="color: #d9b96a; font-size: 20px; font-weight: 700;">${durationText}</div>
+                            <div style="color: #a3a9b8; font-size: 11px; text-transform: uppercase;">Est. Duration</div>
                         </td>
                     </tr>
                 </table>
@@ -663,21 +665,21 @@ function generateCustomerEmail(booking, total, baseFare, discount, tip, processi
         </div>
 
         <!-- VEHICLE & PASSENGERS -->
-        <div style="background-color: #1a1a1a; border-radius: 12px; padding: 20px; margin-bottom: 25px; border: 1px solid #333;">
+        <div style="background-color: #171a1f; border-radius: 12px; padding: 20px; margin-bottom: 25px; border: 1px solid #2a2e36;">
             <div style="display: table; width: 100%;">
                 <div style="display: table-cell; width: 50%;">
-                    <div style="color: #a0a0a0; font-size: 12px; text-transform: uppercase;">Vehicle</div>
-                    <div style="color: #ffffff; font-size: 16px; font-weight: 600; margin-top: 5px;">${booking.vehicle}</div>
+                    <div style="color: #a3a9b8; font-size: 12px; text-transform: uppercase;">Vehicle</div>
+                    <div style="color: #f7f1e3; font-size: 16px; font-weight: 600; margin-top: 5px;">${booking.vehicle}</div>
                 </div>
                 <div style="display: table-cell; width: 50%;">
-                    <div style="color: #a0a0a0; font-size: 12px; text-transform: uppercase;">Passengers</div>
-                    <div style="color: #ffffff; font-size: 16px; font-weight: 600; margin-top: 5px;">${booking.passengers || '1'}</div>
+                    <div style="color: #a3a9b8; font-size: 12px; text-transform: uppercase;">Passengers</div>
+                    <div style="color: #f7f1e3; font-size: 16px; font-weight: 600; margin-top: 5px;">${booking.passengers || '1'}</div>
                 </div>
             </div>
         </div>
 
         <!-- FARE BREAKDOWN -->
-        <div style="background: linear-gradient(135deg, #D4AF37 0%, #b8962e 100%); border-radius: 12px; padding: 25px; margin-bottom: 25px; color: #0d0d0d;">
+        <div style="background: linear-gradient(135deg, #2f4fa8 0%, #1b3170 100%); border-radius: 12px; padding: 25px; margin-bottom: 25px; color: #f7f1e3;">
             <div style="text-align: center;">
                 <div style="font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">Total Fare</div>
                 <div style="font-size: 40px; font-weight: 800;">${total}</div>
@@ -700,9 +702,9 @@ function generateCustomerEmail(booking, total, baseFare, discount, tip, processi
         </div>
 
         <!-- WHAT TO EXPECT -->
-        <div style="background-color: #1a1a1a; border-radius: 12px; padding: 20px; margin-bottom: 25px; border: 1px solid #333;">
-            <div style="color: #D4AF37; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px;">What to Expect</div>
-            <ul style="color: #a0a0a0; font-size: 14px; line-height: 1.8; margin: 0; padding-left: 20px;">
+        <div style="background-color: #171a1f; border-radius: 12px; padding: 20px; margin-bottom: 25px; border: 1px solid #2a2e36;">
+            <div style="color: #d9b96a; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px;">What to Expect</div>
+            <ul style="color: #a3a9b8; font-size: 14px; line-height: 1.8; margin: 0; padding-left: 20px;">
                 <li>Your driver will arrive at the pickup location on time</li>
                 <li>Look for a clean, professional vehicle</li>
                 <li>The driver may contact you upon arrival</li>
@@ -713,26 +715,26 @@ function generateCustomerEmail(booking, total, baseFare, discount, tip, processi
         ${calendarLink ? `
         <!-- ADD TO CALENDAR -->
         <div style="text-align: center; padding: 20px 0; margin-bottom: 15px;">
-            <a href="${calendarLink}" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #D4AF37 0%, #b8962e 100%); color: #0d0d0d; padding: 16px 35px; text-decoration: none; border-radius: 30px; font-weight: 700; font-size: 16px;">
+            <a href="${calendarLink}" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #2f4fa8 0%, #1b3170 100%); color: #f7f1e3; padding: 16px 35px; text-decoration: none; border-radius: 30px; font-weight: 700; font-size: 16px;">
                 Add to Calendar
             </a>
-            <div style="color: #a0a0a0; font-size: 12px; margin-top: 8px;">Opens in Google Calendar</div>
+            <div style="color: #a3a9b8; font-size: 12px; margin-top: 8px;">Opens in Google Calendar</div>
         </div>` : ''}
 
         <!-- CONTACT -->
-        <div style="text-align: center; padding: 25px 0; border-top: 1px solid #333;">
-            <div style="color: #ffffff; font-size: 16px; margin-bottom: 10px;">Questions or changes?</div>
-            <a href="tel:6126665004" style="color: #D4AF37; font-size: 24px; font-weight: 700; text-decoration: none;">(612) 666-5004</a>
-            <div style="color: #a0a0a0; font-size: 13px; margin-top: 10px;">Available 24/7 for your convenience</div>
+        <div style="text-align: center; padding: 25px 0; border-top: 1px solid #2a2e36;">
+            <div style="color: #f7f1e3; font-size: 16px; margin-bottom: 10px;">Questions or changes?</div>
+            <a href="tel:6126665004" style="color: #d9b96a; font-size: 24px; font-weight: 700; text-decoration: none;">(612) 666-5004</a>
+            <div style="color: #a3a9b8; font-size: 13px; margin-top: 10px;">Available 24/7 for your convenience</div>
         </div>
     </div>
 
     <!-- FOOTER -->
-    <div style="background-color: #1a1a1a; padding: 25px; text-align: center; border-top: 1px solid #333;">
-        <div style="color: #D4AF37; font-size: 16px; font-weight: 600; margin-bottom: 5px;">MSP Chauffeur Service</div>
-        <div style="color: #666; font-size: 12px;">Premium Transportation in the Twin Cities</div>
+    <div style="background-color: #171a1f; padding: 25px; text-align: center; border-top: 1px solid #2a2e36;">
+        <div style="color: #d9b96a; font-family: Georgia, 'Times New Roman', serif; font-size: 16px; letter-spacing: 1px; margin-bottom: 5px;">MSP Chauffeur Service</div>
+        <div style="color: #7c8395; font-size: 12px;">Premium Transportation in the Twin Cities</div>
         <div style="margin-top: 15px;">
-            <a href="https://mspairportchauffeur.com" style="color: #a0a0a0; font-size: 12px; text-decoration: none;">mspairportchauffeur.com</a>
+            <a href="https://mspairportchauffeur.com" style="color: #a3a9b8; font-size: 12px; text-decoration: none;">mspairportchauffeur.com</a>
         </div>
     </div>
 </div>`;
@@ -743,50 +745,50 @@ function generateOwnerEmail(booking, total, baseFare, discount, tip, processingF
   return `
 <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto;">
     <!-- URGENT HEADER - GOLD ALERT BAR -->
-    <div style="background: linear-gradient(135deg, #D4AF37 0%, #b8962e 100%); padding: 18px; text-align: center;">
-        <span style="color: #0d0d0d; font-size: 26px; font-weight: 900; letter-spacing: 3px; text-transform: uppercase;">🚨 NEW BOOKING 🚨</span>
+    <div style="background: linear-gradient(135deg, #2f4fa8 0%, #1b3170 100%); padding: 18px; text-align: center;">
+        <span style="color: #d9b96a; font-family: Georgia, 'Times New Roman', serif; font-size: 24px; letter-spacing: 3px; text-transform: uppercase;">New Booking</span>
     </div>
 
     <!-- MONEY BOX - BLACK WITH GOLD TEXT FOR HIGH CONTRAST -->
-    <div style="background-color: #0d0d0d; padding: 35px 30px; text-align: center; border-bottom: 4px solid #D4AF37;">
-        <div style="color: #888; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;">TOTAL EARNINGS</div>
-        <div style="color: #D4AF37; font-size: 56px; font-weight: 900; letter-spacing: -1px;">${total}</div>
+    <div style="background-color: #0a0b0e; padding: 35px 30px; text-align: center; border-bottom: 4px solid #d9b96a;">
+        <div style="color: #a3a9b8; font-size: 13px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;">TOTAL EARNINGS</div>
+        <div style="color: #d9b96a; font-size: 56px; font-weight: 900; letter-spacing: -1px;">${total}</div>
         ${isRoundTrip || hasMeetAndGreet || (parseInt(booking.carSeats) || 0) > 0 || booking.serviceType === 'hourly' || (Array.isArray(booking.stops) && booking.stops.length) ? `
         <div style="margin-top: 12px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
             ${isRoundTrip ? `<span style="background-color: #1a5f1a; padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: 600; color: #90EE90;">🔄 ROUND TRIP</span>` : ''}
-            ${hasMeetAndGreet ? `<span style="background-color: #D4AF37; padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: 600; color: #0d0d0d;">👤 MEET & GREET</span>` : ''}
-            ${(parseInt(booking.carSeats) || 0) > 0 ? `<span style="background-color: #D4AF37; padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: 600; color: #0d0d0d;">🧒 ${booking.carSeats} CAR SEAT${parseInt(booking.carSeats) > 1 ? 'S' : ''}</span>` : ''}
-            ${booking.serviceType === 'hourly' ? `<span style="background-color: #243f8f; padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: 600; color: #ffffff;">⏱ HOURLY · ${booking.hours} HRS</span>` : ''}
-            ${(Array.isArray(booking.stops) && booking.stops.length) ? `<span style="background-color: #D4AF37; padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: 600; color: #0d0d0d;">📍 ${booking.stops.length} STOP${booking.stops.length > 1 ? 'S' : ''}</span>` : ''}
+            ${hasMeetAndGreet ? `<span style="background-color: #d9b96a; padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: 600; color: #0a0b0e;">👤 MEET & GREET</span>` : ''}
+            ${(parseInt(booking.carSeats) || 0) > 0 ? `<span style="background-color: #d9b96a; padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: 600; color: #0a0b0e;">🧒 ${booking.carSeats} CAR SEAT${parseInt(booking.carSeats) > 1 ? 'S' : ''}</span>` : ''}
+            ${booking.serviceType === 'hourly' ? `<span style="background-color: #243f8f; padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: 600; color: #f7f1e3;">⏱ HOURLY · ${booking.hours} HRS</span>` : ''}
+            ${(Array.isArray(booking.stops) && booking.stops.length) ? `<span style="background-color: #d9b96a; padding: 5px 12px; border-radius: 15px; font-size: 12px; font-weight: 600; color: #0a0b0e;">📍 ${booking.stops.length} STOP${booking.stops.length > 1 ? 'S' : ''}</span>` : ''}
         </div>` : ''}
-        <div style="margin-top: 18px; padding-top: 18px; border-top: 1px solid #333;">
-            <span style="color: #888; font-size: 15px;">Base: <strong style="color: #ffffff;">${baseFare}</strong></span>
-            ${isRoundTrip ? `<span style="color: #888; font-size: 15px; margin-left: 25px;">Return: <strong style="color: #ffffff;">${baseFare}</strong></span>` : ''}
-            ${isRoundTrip && parseFloat(String(roundTripDiscount).replace('$','')) > 0 ? `<span style="color: #888; font-size: 15px; margin-left: 25px;">RT Savings: <strong style="color: #90EE90;">-${roundTripDiscount}</strong></span>` : ''}
-            ${hasMeetAndGreet ? `<span style="color: #888; font-size: 15px; margin-left: 25px;">Meet & Greet: <strong style="color: #D4AF37;">${meetAndGreetPrice}</strong></span>` : ''}
-            ${(parseInt(booking.carSeats) || 0) > 0 ? `<span style="color: #888; font-size: 15px; margin-left: 25px;">Car Seats × ${booking.carSeats}: <strong style="color: #D4AF37;">$${booking.carSeatsTotal || parseInt(booking.carSeats) * 25}</strong></span>` : ''}
-            ${(Array.isArray(booking.stops) && booking.stops.length) ? `<span style="color: #888; font-size: 15px; margin-left: 25px;">Stops × ${booking.stops.length}: <strong style="color: #D4AF37;">$${booking.stopsFee || booking.stops.length * 15}</strong></span>` : ''}
-            ${hasDiscount ? `<span style="color: #888; font-size: 15px; margin-left: 25px;">Discount: <strong style="color: #ff6b6b;">-${discount}</strong></span>` : ''}
-            ${hasTip ? `<span style="color: #888; font-size: 15px; margin-left: 25px;">Tip: <strong style="color: #D4AF37;">${tip}</strong></span>` : ''}
-            ${hasProcessingFee ? `<span style="color: #888; font-size: 15px; margin-left: 25px;">Fee: <strong style="color: #888;">${processingFee}</strong></span>` : ''}
+        <div style="margin-top: 18px; padding-top: 18px; border-top: 1px solid #2a2e36;">
+            <span style="color: #a3a9b8; font-size: 15px;">Base: <strong style="color: #f7f1e3;">${baseFare}</strong></span>
+            ${isRoundTrip ? `<span style="color: #a3a9b8; font-size: 15px; margin-left: 25px;">Return: <strong style="color: #f7f1e3;">${baseFare}</strong></span>` : ''}
+            ${isRoundTrip && parseFloat(String(roundTripDiscount).replace('$','')) > 0 ? `<span style="color: #a3a9b8; font-size: 15px; margin-left: 25px;">RT Savings: <strong style="color: #90EE90;">-${roundTripDiscount}</strong></span>` : ''}
+            ${hasMeetAndGreet ? `<span style="color: #a3a9b8; font-size: 15px; margin-left: 25px;">Meet & Greet: <strong style="color: #d9b96a;">${meetAndGreetPrice}</strong></span>` : ''}
+            ${(parseInt(booking.carSeats) || 0) > 0 ? `<span style="color: #a3a9b8; font-size: 15px; margin-left: 25px;">Car Seats × ${booking.carSeats}: <strong style="color: #d9b96a;">$${booking.carSeatsTotal || parseInt(booking.carSeats) * 25}</strong></span>` : ''}
+            ${(Array.isArray(booking.stops) && booking.stops.length) ? `<span style="color: #a3a9b8; font-size: 15px; margin-left: 25px;">Stops × ${booking.stops.length}: <strong style="color: #d9b96a;">$${booking.stopsFee || booking.stops.length * 15}</strong></span>` : ''}
+            ${hasDiscount ? `<span style="color: #a3a9b8; font-size: 15px; margin-left: 25px;">Discount: <strong style="color: #ff6b6b;">-${discount}</strong></span>` : ''}
+            ${hasTip ? `<span style="color: #a3a9b8; font-size: 15px; margin-left: 25px;">Tip: <strong style="color: #d9b96a;">${tip}</strong></span>` : ''}
+            ${hasProcessingFee ? `<span style="color: #a3a9b8; font-size: 15px; margin-left: 25px;">Fee: <strong style="color: #a3a9b8;">${processingFee}</strong></span>` : ''}
         </div>
         ${hasDiscount ? `<div style="margin-top: 10px; color: #ff6b6b; font-size: 13px;">⚠️ Promo code used: ${promoCode}</div>` : ''}
         <div style="margin-top: 15px;">
-            <span style="background-color: ${booking.paymentMethod === 'online' ? '#D4AF37' : '#ff9900'}; color: #0d0d0d; padding: 10px 25px; border-radius: 25px; font-size: 14px; font-weight: 800; display: inline-block;">
+            <span style="background-color: ${booking.paymentMethod === 'online' ? '#d9b96a' : '#ff9900'}; color: #0a0b0e; padding: 10px 25px; border-radius: 25px; font-size: 14px; font-weight: 800; display: inline-block;">
                 ${booking.paymentMethod === 'online' ? '✅ PAID ONLINE' : '💵 COLLECT FROM CUSTOMER'}
             </span>
         </div>
     </div>
 
     <!-- QUICK GLANCE BOX -->
-    <div style="background-color: #1a1a1a; padding: 25px; display: table; width: 100%; box-sizing: border-box;">
-        <div style="display: table-cell; width: 50%; text-align: center; border-right: 1px solid #333;">
-            <div style="color: #D4AF37; font-size: 36px; font-weight: 800;">${distance} mi</div>
-            <div style="color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Distance</div>
+    <div style="background-color: #171a1f; padding: 25px; display: table; width: 100%; box-sizing: border-box;">
+        <div style="display: table-cell; width: 50%; text-align: center; border-right: 1px solid #2a2e36;">
+            <div style="color: #d9b96a; font-size: 36px; font-weight: 800;">${distance} mi</div>
+            <div style="color: #a3a9b8; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Distance</div>
         </div>
         <div style="display: table-cell; width: 50%; text-align: center;">
-            <div style="color: #ffffff; font-size: 22px; font-weight: 700;">${booking.date}</div>
-            <div style="color: #D4AF37; font-size: 22px; font-weight: 700;">${booking.time}</div>
+            <div style="color: #f7f1e3; font-size: 22px; font-weight: 700;">${booking.date}</div>
+            <div style="color: #d9b96a; font-size: 22px; font-weight: 700;">${booking.time}</div>
         </div>
     </div>
     ${isRoundTrip && returnDate ? `
@@ -796,110 +798,112 @@ function generateOwnerEmail(booking, total, baseFare, discount, tip, processingF
     </div>` : ''}
 
     <!-- MAIN CONTENT -->
-    <div style="background-color: #0d0d0d; padding: 30px; color: #ffffff;">
+    <div style="background-color: #0a0b0e; padding: 30px; color: #f7f1e3;">
 
         <!-- CUSTOMER INFO -->
-        <div style="background-color: #1a1a1a; border: 2px solid #D4AF37; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
-            <div style="color: #D4AF37; font-size: 14px; font-weight: 700; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px;">👤 Customer</div>
-            <div style="font-size: 24px; font-weight: 700; color: #ffffff; margin-bottom: 12px;">${booking.name}</div>
+        <div style="background-color: #171a1f; border: 2px solid #d9b96a; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+            <div style="color: #d9b96a; font-size: 14px; font-weight: 700; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px;">👤 Customer</div>
+            <div style="font-size: 24px; font-weight: 700; color: #f7f1e3; margin-bottom: 12px;">${booking.name}</div>
             <div style="margin-bottom: 8px;">
-                <a href="tel:${booking.phone}" style="color: #D4AF37; font-size: 22px; font-weight: 700; text-decoration: none;">📞 ${booking.phone}</a>
+                <a href="tel:${booking.phone}" style="color: #d9b96a; font-size: 22px; font-weight: 700; text-decoration: none;">📞 ${booking.phone}</a>
             </div>
             <div>
-                <a href="mailto:${booking.email}" style="color: #a0a0a0; font-size: 14px; text-decoration: none;">✉️ ${booking.email}</a>
+                <a href="mailto:${booking.email}" style="color: #a3a9b8; font-size: 14px; text-decoration: none;">✉️ ${booking.email}</a>
             </div>
         </div>
 
         <!-- ROUTE INFO -->
-        <div style="background-color: #1a1a1a; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
-            <div style="color: #D4AF37; font-size: 14px; font-weight: 700; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px;">🗺️ Route</div>
+        <div style="background-color: #171a1f; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+            <div style="color: #d9b96a; font-size: 14px; font-weight: 700; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px;">🗺️ Route</div>
 
             <div style="margin-bottom: 15px;">
-                <div style="color: #D4AF37; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">📍 PICKUP</div>
-                <div style="color: #ffffff; font-size: 16px; line-height: 1.4; margin-bottom: 8px;">${booking.pickup}</div>
-                <a href="${pickupLink}" style="display: inline-block; background-color: #D4AF37; color: #0d0d0d; padding: 8px 15px; border-radius: 5px; font-size: 13px; font-weight: 600; text-decoration: none;">Open in Maps</a>
+                <div style="color: #d9b96a; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">📍 PICKUP</div>
+                <div style="color: #f7f1e3; font-size: 16px; line-height: 1.4; margin-bottom: 8px;">${booking.pickup}</div>
+                <a href="${pickupLink}" style="display: inline-block; background-color: #d9b96a; color: #0a0b0e; padding: 8px 15px; border-radius: 5px; font-size: 13px; font-weight: 600; text-decoration: none;">Open in Maps</a>
             </div>
 
             ${(Array.isArray(booking.stops) ? booking.stops : []).map((stop, i) => `
-            <div style="border-left: 2px dashed #D4AF37; height: 20px; margin-left: 6px;"></div>
+            <div style="border-left: 2px dashed #d9b96a; height: 20px; margin-left: 6px;"></div>
             <div style="margin-bottom: 15px;">
-                <div style="color: #D4AF37; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">🔸 STOP ${i + 1}</div>
-                <div style="color: #ffffff; font-size: 16px; line-height: 1.4;">${stop}</div>
+                <div style="color: #d9b96a; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">🔸 STOP ${i + 1}</div>
+                <div style="color: #f7f1e3; font-size: 16px; line-height: 1.4;">${stop}</div>
             </div>`).join('')}
-            <div style="border-left: 2px dashed #D4AF37; height: 20px; margin-left: 6px;"></div>
+            <div style="border-left: 2px dashed #d9b96a; height: 20px; margin-left: 6px;"></div>
 
             <div>
-                <div style="color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">🏁 ${booking.serviceType === 'hourly' ? 'DROP-OFF / AS DIRECTED' : 'DROPOFF'}</div>
-                <div style="color: #ffffff; font-size: 16px; line-height: 1.4; margin-bottom: 8px;">${booking.dropoff}</div>
-                <a href="${dropoffLink}" style="display: inline-block; background-color: #D4AF37; color: #0d0d0d; padding: 8px 15px; border-radius: 5px; font-size: 13px; font-weight: 600; text-decoration: none;">Open in Maps</a>
+                <div style="color: #a3a9b8; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">🏁 ${booking.serviceType === 'hourly' ? 'DROP-OFF / AS DIRECTED' : 'DROPOFF'}</div>
+                <div style="color: #f7f1e3; font-size: 16px; line-height: 1.4; margin-bottom: 8px;">${booking.dropoff}</div>
+                <a href="${dropoffLink}" style="display: inline-block; background-color: #d9b96a; color: #0a0b0e; padding: 8px 15px; border-radius: 5px; font-size: 13px; font-weight: 600; text-decoration: none;">Open in Maps</a>
             </div>
         </div>
 
         <!-- TRIP DETAILS -->
-        <div style="background-color: #1a1a1a; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
-            <div style="color: #D4AF37; font-size: 14px; font-weight: 700; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px;">📋 Details</div>
+        <div style="background-color: #171a1f; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+            <div style="color: #d9b96a; font-size: 14px; font-weight: 700; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px;">📋 Details</div>
             <table style="width: 100%; border-collapse: collapse;">
-                <tr><td style="padding: 8px 0; color: #888; width: 40%;">Confirmation:</td><td style="padding: 8px 0; color: #D4AF37; font-weight: 700;">${booking.confirmationNumber}</td></tr>
-                <tr><td style="padding: 8px 0; color: #888;">Vehicle:</td><td style="padding: 8px 0; color: #ffffff;">${booking.vehicle}</td></tr>
-                <tr><td style="padding: 8px 0; color: #888;">Passengers:</td><td style="padding: 8px 0; color: #ffffff;">${booking.passengers || '1'}</td></tr>
-                ${isRoundTrip ? `<tr><td style="padding: 8px 0; color: #888;">Trip Type:</td><td style="padding: 8px 0; color: #90EE90; font-weight: 700;">🔄 ROUND TRIP</td></tr>` : ''}
-                ${hasMeetAndGreet ? `<tr><td style="padding: 8px 0; color: #888;">Service:</td><td style="padding: 8px 0; color: #D4AF37; font-weight: 700;">👤 MEET & GREET</td></tr>` : ''}
-                ${(parseInt(booking.carSeats) || 0) > 0 ? `<tr><td style="padding: 8px 0; color: #888;">Car Seats:</td><td style="padding: 8px 0; color: #D4AF37; font-weight: 700;">🧒 ${booking.carSeats} — install before pickup</td></tr>` : ''}
-                ${booking.flight ? `<tr><td style="padding: 8px 0; color: #888;">Flight #:</td><td style="padding: 8px 0; color: #ffffff;">${booking.flight}</td></tr>` : ''}
-                ${booking.notes ? `<tr><td style="padding: 8px 0; color: #888;">Notes:</td><td style="padding: 8px 0; color: #D4AF37; font-weight: 600;">${booking.notes}</td></tr>` : ''}
+                <tr><td style="padding: 8px 0; color: #a3a9b8; width: 40%;">Confirmation:</td><td style="padding: 8px 0; color: #d9b96a; font-weight: 700;">${booking.confirmationNumber}</td></tr>
+                <tr><td style="padding: 8px 0; color: #a3a9b8;">Vehicle:</td><td style="padding: 8px 0; color: #f7f1e3;">${booking.vehicle}</td></tr>
+                <tr><td style="padding: 8px 0; color: #a3a9b8;">Passengers:</td><td style="padding: 8px 0; color: #f7f1e3;">${booking.passengers || '1'}</td></tr>
+                ${isRoundTrip ? `<tr><td style="padding: 8px 0; color: #a3a9b8;">Trip Type:</td><td style="padding: 8px 0; color: #90EE90; font-weight: 700;">🔄 ROUND TRIP</td></tr>` : ''}
+                ${hasMeetAndGreet ? `<tr><td style="padding: 8px 0; color: #a3a9b8;">Service:</td><td style="padding: 8px 0; color: #d9b96a; font-weight: 700;">👤 MEET & GREET</td></tr>` : ''}
+                ${(parseInt(booking.carSeats) || 0) > 0 ? `<tr><td style="padding: 8px 0; color: #a3a9b8;">Car Seats:</td><td style="padding: 8px 0; color: #d9b96a; font-weight: 700;">🧒 ${booking.carSeats} — install before pickup</td></tr>` : ''}
+                ${booking.flight ? `<tr><td style="padding: 8px 0; color: #a3a9b8;">Flight #:</td><td style="padding: 8px 0; color: #f7f1e3;">${booking.flight}</td></tr>` : ''}
+                ${booking.notes ? `<tr><td style="padding: 8px 0; color: #a3a9b8;">Notes:</td><td style="padding: 8px 0; color: #d9b96a; font-weight: 600;">${booking.notes}</td></tr>` : ''}
             </table>
         </div>
 
         <!-- ACTION BUTTONS -->
         <div style="text-align: center; padding: 20px 0;">
-            <a href="tel:${booking.phone}" style="display: inline-block; background: linear-gradient(135deg, #D4AF37 0%, #b8962e 100%); color: #0d0d0d; padding: 18px 45px; text-decoration: none; border-radius: 30px; font-weight: 800; font-size: 18px; margin-bottom: 12px;">📞 CALL NOW</a>
+            <a href="tel:${booking.phone}" style="display: inline-block; background: linear-gradient(135deg, #2f4fa8 0%, #1b3170 100%); color: #f7f1e3; padding: 18px 45px; text-decoration: none; border-radius: 30px; font-weight: 800; font-size: 18px; margin-bottom: 12px;">📞 CALL NOW</a>
             <div style="margin-top: 14px;">
-                <a href="https://mspairportchauffeur.com/admin.html?focus=${encodeURIComponent(booking.confirmationNumber || '')}${process.env.CANCEL_ADMIN_TOKEN ? `&token=${encodeURIComponent(process.env.CANCEL_ADMIN_TOKEN)}` : ''}" style="display: inline-block; background-color: transparent; color: #D4AF37; padding: 12px 24px; text-decoration: none; border: 1px solid rgba(212, 175, 55, 0.4); border-radius: 25px; font-weight: 600; font-size: 13px;">Open in Admin →</a>
+                <a href="https://mspairportchauffeur.com/admin.html?focus=${encodeURIComponent(booking.confirmationNumber || '')}${process.env.CANCEL_ADMIN_TOKEN ? `&token=${encodeURIComponent(process.env.CANCEL_ADMIN_TOKEN)}` : ''}" style="display: inline-block; background-color: transparent; color: #d9b96a; padding: 12px 24px; text-decoration: none; border: 1px solid rgba(212, 175, 55, 0.4); border-radius: 25px; font-weight: 600; font-size: 13px;">Open in Admin →</a>
             </div>
         </div>
     </div>
 
     <!-- FOOTER -->
-    <div style="background-color: #1a1a1a; padding: 20px; text-align: center; border-top: 1px solid #333;">
-        <div style="color: #D4AF37; font-size: 14px; font-weight: 600;">MSP Chauffeur Service</div>
-        <div style="color: #666; font-size: 12px; margin-top: 5px;">Premium Transportation</div>
+    <div style="background-color: #171a1f; padding: 20px; text-align: center; border-top: 1px solid #2a2e36;">
+        <div style="color: #d9b96a; font-family: Georgia, 'Times New Roman', serif; font-size: 15px; letter-spacing: 1px;">MSP Chauffeur Service</div>
+        <div style="color: #7c8395; font-size: 12px; margin-top: 5px;">Premium Transportation</div>
     </div>
 </div>`;
 }
 
 function generateReminderEmail(booking, hoursBeforeText, pickupLink) {
   return `
-<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0d0d0d;">
-    <div style="background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%); padding: 40px 30px; text-align: center; border-bottom: 2px solid #D4AF37;">
-        <div style="color: #D4AF37; font-size: 28px; font-weight: 700; letter-spacing: 2px; margin-bottom: 10px;">MSP Chauffeur Service</div>
-        <div style="color: #ffffff; font-size: 18px; font-weight: 400;">Ride Reminder</div>
+<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0a0b0e;">
+    <div style="background: linear-gradient(135deg, #171a1f 0%, #0a0b0e 100%); padding: 40px 30px; text-align: center; border-bottom: 2px solid #d9b96a;">
+        <img src="https://mspairportchauffeur.com/images/logo/mark-512.png" width="72" height="72" alt="MSP Chauffeur Service" style="display: block; margin: 0 auto 14px; width: 72px; height: 72px; border-radius: 50%; border: 1px solid rgba(193,154,63,0.5);">
+        <div style="color: #d9b96a; font-family: Georgia, 'Times New Roman', serif; font-size: 26px; font-weight: 400; letter-spacing: 1px; margin-bottom: 4px;">MSP Chauffeur Service</div>
+        <div style="color: #a3a9b8; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 10px;">Black Car &middot; MSP</div>
+        <div style="color: #f7f1e3; font-size: 18px; font-weight: 400;">Ride Reminder</div>
     </div>
-    <div style="padding: 30px; color: #ffffff;">
+    <div style="padding: 30px; color: #f7f1e3;">
         <div style="font-size: 22px; font-weight: 600; margin-bottom: 15px;">Hi ${booking.name},</div>
-        <div style="color: #a0a0a0; font-size: 15px; line-height: 1.6; margin-bottom: 25px;">
+        <div style="color: #a3a9b8; font-size: 15px; line-height: 1.6; margin-bottom: 25px;">
             Your ride is ${hoursBeforeText}! Here are your trip details:
         </div>
-        <div style="background-color: #1a1a1a; border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid #333;">
+        <div style="background-color: #171a1f; border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid #2a2e36;">
             <table style="width: 100%; border-collapse: collapse;">
-                <tr><td style="padding: 8px 0; color: #888;">Date:</td><td style="padding: 8px 0; color: #D4AF37; font-weight: 700;">${booking.date}</td></tr>
-                <tr><td style="padding: 8px 0; color: #888;">Time:</td><td style="padding: 8px 0; color: #D4AF37; font-weight: 700;">${booking.time}</td></tr>
-                <tr><td style="padding: 8px 0; color: #888;">Pickup:</td><td style="padding: 8px 0; color: #ffffff;">${booking.pickup}</td></tr>
-                <tr><td style="padding: 8px 0; color: #888;">Dropoff:</td><td style="padding: 8px 0; color: #ffffff;">${booking.dropoff}</td></tr>
-                <tr><td style="padding: 8px 0; color: #888;">Vehicle:</td><td style="padding: 8px 0; color: #ffffff;">${booking.vehicle}</td></tr>
-                <tr><td style="padding: 8px 0; color: #888;">Confirmation:</td><td style="padding: 8px 0; color: #D4AF37;">${booking.confirmationNumber}</td></tr>
+                <tr><td style="padding: 8px 0; color: #a3a9b8;">Date:</td><td style="padding: 8px 0; color: #d9b96a; font-weight: 700;">${booking.date}</td></tr>
+                <tr><td style="padding: 8px 0; color: #a3a9b8;">Time:</td><td style="padding: 8px 0; color: #d9b96a; font-weight: 700;">${booking.time}</td></tr>
+                <tr><td style="padding: 8px 0; color: #a3a9b8;">Pickup:</td><td style="padding: 8px 0; color: #f7f1e3;">${booking.pickup}</td></tr>
+                <tr><td style="padding: 8px 0; color: #a3a9b8;">Dropoff:</td><td style="padding: 8px 0; color: #f7f1e3;">${booking.dropoff}</td></tr>
+                <tr><td style="padding: 8px 0; color: #a3a9b8;">Vehicle:</td><td style="padding: 8px 0; color: #f7f1e3;">${booking.vehicle}</td></tr>
+                <tr><td style="padding: 8px 0; color: #a3a9b8;">Confirmation:</td><td style="padding: 8px 0; color: #d9b96a;">${booking.confirmationNumber}</td></tr>
             </table>
         </div>
         <div style="text-align: center; margin: 25px 0;">
-            <a href="${pickupLink}" style="display: inline-block; background: linear-gradient(135deg, #D4AF37 0%, #b8962e 100%); color: #0d0d0d; padding: 14px 30px; text-decoration: none; border-radius: 25px; font-weight: 700; font-size: 15px;">View Pickup Location</a>
+            <a href="${pickupLink}" style="display: inline-block; background: linear-gradient(135deg, #2f4fa8 0%, #1b3170 100%); color: #f7f1e3; padding: 14px 30px; text-decoration: none; border-radius: 25px; font-weight: 700; font-size: 15px;">View Pickup Location</a>
         </div>
-        <div style="text-align: center; padding: 20px 0; border-top: 1px solid #333;">
-            <div style="color: #ffffff; font-size: 15px; margin-bottom: 8px;">Need to make changes?</div>
-            <a href="tel:6126665004" style="color: #D4AF37; font-size: 22px; font-weight: 700; text-decoration: none;">(612) 666-5004</a>
+        <div style="text-align: center; padding: 20px 0; border-top: 1px solid #2a2e36;">
+            <div style="color: #f7f1e3; font-size: 15px; margin-bottom: 8px;">Need to make changes?</div>
+            <a href="tel:6126665004" style="color: #d9b96a; font-size: 22px; font-weight: 700; text-decoration: none;">(612) 666-5004</a>
         </div>
     </div>
-    <div style="background-color: #1a1a1a; padding: 20px; text-align: center; border-top: 1px solid #333;">
-        <div style="color: #D4AF37; font-size: 14px; font-weight: 600;">MSP Chauffeur Service</div>
-        <div style="color: #666; font-size: 12px; margin-top: 5px;">Premium Transportation in the Twin Cities</div>
+    <div style="background-color: #171a1f; padding: 20px; text-align: center; border-top: 1px solid #2a2e36;">
+        <div style="color: #d9b96a; font-family: Georgia, 'Times New Roman', serif; font-size: 15px; letter-spacing: 1px;">MSP Chauffeur Service</div>
+        <div style="color: #7c8395; font-size: 12px; margin-top: 5px;">Premium Transportation in the Twin Cities</div>
     </div>
 </div>`;
 }
@@ -907,36 +911,42 @@ function generateReminderEmail(booking, hoursBeforeText, pickupLink) {
 function generateReviewEmail(booking) {
   // TODO: replace the g.page URL below with this brand's Google review link
   return `
-<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0d0d0d;">
-    <div style="background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%); padding: 40px 30px; text-align: center; border-bottom: 2px solid #D4AF37;">
-        <div style="color: #D4AF37; font-size: 28px; font-weight: 700; letter-spacing: 2px; margin-bottom: 10px;">MSP Chauffeur Service</div>
-        <div style="color: #ffffff; font-size: 18px; font-weight: 400;">How was your ride?</div>
+<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0a0b0e;">
+    <div style="background: linear-gradient(135deg, #171a1f 0%, #0a0b0e 100%); padding: 40px 30px; text-align: center; border-bottom: 2px solid #d9b96a;">
+        <img src="https://mspairportchauffeur.com/images/logo/mark-512.png" width="72" height="72" alt="MSP Chauffeur Service" style="display: block; margin: 0 auto 14px; width: 72px; height: 72px; border-radius: 50%; border: 1px solid rgba(193,154,63,0.5);">
+        <div style="color: #d9b96a; font-family: Georgia, 'Times New Roman', serif; font-size: 26px; font-weight: 400; letter-spacing: 1px; margin-bottom: 4px;">MSP Chauffeur Service</div>
+        <div style="color: #a3a9b8; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 10px;">Black Car &middot; MSP</div>
+        <div style="color: #f7f1e3; font-size: 18px; font-weight: 400;">How was your ride?</div>
     </div>
-    <div style="padding: 30px; color: #ffffff;">
+    <div style="padding: 30px; color: #f7f1e3;">
         <div style="font-size: 22px; font-weight: 600; margin-bottom: 15px;">Hi ${booking.name},</div>
-        <div style="color: #a0a0a0; font-size: 15px; line-height: 1.6; margin-bottom: 25px;">
+        <div style="color: #a3a9b8; font-size: 15px; line-height: 1.6; margin-bottom: 25px;">
             We hope you had a wonderful experience with MSP Chauffeur Service. Your feedback means the world to us and helps other customers find reliable transportation.
         </div>
         <div style="text-align: center; margin: 30px 0;">
-            <div style="color: #D4AF37; font-size: 48px; margin-bottom: 15px;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-            <a href="https://g.page/r/REPLACE_WITH_REVIEW_LINK/review" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #D4AF37 0%, #b8962e 100%); color: #0d0d0d; padding: 18px 45px; text-decoration: none; border-radius: 30px; font-weight: 800; font-size: 18px;">
+            <div style="color: #d9b96a; font-size: 48px; margin-bottom: 15px;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+            <a href="https://g.page/r/REPLACE_WITH_REVIEW_LINK/review" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #2f4fa8 0%, #1b3170 100%); color: #f7f1e3; padding: 18px 45px; text-decoration: none; border-radius: 30px; font-weight: 800; font-size: 18px;">
                 Leave a Review
             </a>
-            <div style="color: #a0a0a0; font-size: 12px; margin-top: 10px;">Takes less than a minute</div>
+            <div style="color: #a3a9b8; font-size: 12px; margin-top: 10px;">Takes less than a minute</div>
         </div>
-        <div style="background-color: #1a1a1a; border-radius: 12px; padding: 20px; margin-top: 25px; border: 1px solid #333; text-align: center;">
-            <div style="color: #a0a0a0; font-size: 14px; margin-bottom: 8px;">Your trip on ${booking.date}</div>
-            <div style="color: #ffffff; font-size: 14px;">${booking.pickup} &rarr; ${booking.dropoff}</div>
-            <div style="color: #888; font-size: 12px; margin-top: 5px;">Confirmation: ${booking.confirmationNumber}</div>
+        <div style="background-color: #171a1f; border-radius: 12px; padding: 20px; margin-top: 25px; border: 1px solid #2a2e36; text-align: center;">
+            <div style="color: #a3a9b8; font-size: 14px; margin-bottom: 8px;">Your trip on ${booking.date}</div>
+            <div style="color: #f7f1e3; font-size: 14px;">${booking.pickup} &rarr; ${booking.dropoff}</div>
+            <div style="color: #a3a9b8; font-size: 12px; margin-top: 5px;">Confirmation: ${booking.confirmationNumber}</div>
         </div>
-        <div style="text-align: center; padding: 25px 0; border-top: 1px solid #333; margin-top: 25px;">
-            <div style="color: #ffffff; font-size: 15px; margin-bottom: 5px;">Book your next ride</div>
-            <a href="https://mspairportchauffeur.com/book-a-ride.html" style="color: #D4AF37; font-size: 16px; font-weight: 700; text-decoration: none;">mspairportchauffeur.com</a>
+        <div style="text-align: center; padding: 25px 0; border-top: 1px solid #2a2e36; margin-top: 25px;">
+            <div style="color: #f7f1e3; font-size: 15px; margin-bottom: 5px;">Book your next ride</div>
+            <a href="https://mspairportchauffeur.com/book-a-ride.html" style="color: #d9b96a; font-size: 16px; font-weight: 700; text-decoration: none;">mspairportchauffeur.com</a>
         </div>
     </div>
-    <div style="background-color: #1a1a1a; padding: 20px; text-align: center; border-top: 1px solid #333;">
-        <div style="color: #D4AF37; font-size: 14px; font-weight: 600;">MSP Chauffeur Service</div>
-        <div style="color: #666; font-size: 12px; margin-top: 5px;">Premium Transportation in the Twin Cities</div>
+    <div style="background-color: #171a1f; padding: 20px; text-align: center; border-top: 1px solid #2a2e36;">
+        <div style="color: #d9b96a; font-family: Georgia, 'Times New Roman', serif; font-size: 15px; letter-spacing: 1px;">MSP Chauffeur Service</div>
+        <div style="color: #7c8395; font-size: 12px; margin-top: 5px;">Premium Transportation in the Twin Cities</div>
     </div>
 </div>`;
 }
+
+
+// Exposed for local template previews.
+export { generateCustomerEmail, generateOwnerEmail, generateReminderEmail, generateReviewEmail };

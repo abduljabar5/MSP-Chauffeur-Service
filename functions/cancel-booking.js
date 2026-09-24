@@ -61,42 +61,44 @@ async function cancelTwilioMessage(accountSid, authToken, messageSid) {
 function generateCustomerCancelHtml(rec, reason) {
   const b = rec.booking || {};
   const reasonBlock = reason
-    ? `<div style="background-color: #1a1a1a; border-left: 3px solid #D4AF37; padding: 15px 20px; margin: 20px 0;">
-         <div style="color: #D4AF37; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">Reason</div>
-         <div style="color: #ffffff; font-size: 14px;">${escapeHtml(reason)}</div>
+    ? `<div style="background-color: #171a1f; border-left: 3px solid #d9b96a; padding: 15px 20px; margin: 20px 0;">
+         <div style="color: #d9b96a; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">Reason</div>
+         <div style="color: #f7f1e3; font-size: 14px;">${escapeHtml(reason)}</div>
        </div>` : '';
   const refundBlock = b.paymentMethod === 'online'
-    ? `<p style="color: #a0a0a0; font-size: 14px; line-height: 1.6;">If you paid online, your refund will appear on your card within 5–10 business days.</p>` : '';
+    ? `<p style="color: #a3a9b8; font-size: 14px; line-height: 1.6;">If you paid online, your refund will appear on your card within 5–10 business days.</p>` : '';
   return `
-<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0d0d0d;">
-    <div style="background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%); padding: 40px 30px; text-align: center; border-bottom: 2px solid #D4AF37;">
-        <div style="color: #D4AF37; font-size: 28px; font-weight: 700; letter-spacing: 2px; margin-bottom: 10px;">MSP Chauffeur Service</div>
-        <div style="color: #ffffff; font-size: 18px;">Booking Cancelled</div>
+<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0a0b0e;">
+    <div style="background: linear-gradient(135deg, #171a1f 0%, #0a0b0e 100%); padding: 40px 30px; text-align: center; border-bottom: 2px solid #d9b96a;">
+        <img src="https://mspairportchauffeur.com/images/logo/mark-512.png" width="72" height="72" alt="MSP Chauffeur Service" style="display: block; margin: 0 auto 14px; width: 72px; height: 72px; border-radius: 50%; border: 1px solid rgba(193,154,63,0.5);">
+        <div style="color: #d9b96a; font-family: Georgia, 'Times New Roman', serif; font-size: 26px; font-weight: 400; letter-spacing: 1px; margin-bottom: 4px;">MSP Chauffeur Service</div>
+        <div style="color: #a3a9b8; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 10px;">Black Car &middot; MSP</div>
+        <div style="color: #f7f1e3; font-size: 18px;">Booking Cancelled</div>
     </div>
-    <div style="padding: 30px; color: #ffffff;">
+    <div style="padding: 30px; color: #f7f1e3;">
         <div style="font-size: 22px; font-weight: 600; margin-bottom: 15px;">Hi ${escapeHtml(b.name || '')},</div>
-        <div style="color: #a0a0a0; font-size: 15px; line-height: 1.6; margin-bottom: 25px;">
-            Your booking with MSP Chauffeur Service has been cancelled. Confirmation number <strong style="color: #D4AF37;">${escapeHtml(rec.confirmationNumber)}</strong>.
+        <div style="color: #a3a9b8; font-size: 15px; line-height: 1.6; margin-bottom: 25px;">
+            Your booking with MSP Chauffeur Service has been cancelled. Confirmation number <strong style="color: #d9b96a;">${escapeHtml(rec.confirmationNumber)}</strong>.
         </div>
         ${reasonBlock}
-        <div style="background-color: #1a1a1a; border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid #333;">
-            <div style="color: #D4AF37; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">Original Trip</div>
+        <div style="background-color: #171a1f; border-radius: 12px; padding: 20px; margin: 20px 0; border: 1px solid #2a2e36;">
+            <div style="color: #d9b96a; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">Original Trip</div>
             <table style="width: 100%; border-collapse: collapse;">
-                <tr><td style="padding: 6px 0; color: #888; width: 35%;">When</td><td style="padding: 6px 0; color: #fff;">${escapeHtml(b.date || '')} at ${escapeHtml(b.time || '')}</td></tr>
-                <tr><td style="padding: 6px 0; color: #888;">Pickup</td><td style="padding: 6px 0; color: #fff;">${escapeHtml(b.pickup || '')}</td></tr>
-                <tr><td style="padding: 6px 0; color: #888;">Dropoff</td><td style="padding: 6px 0; color: #fff;">${escapeHtml(b.dropoff || '')}</td></tr>
-                <tr><td style="padding: 6px 0; color: #888;">Vehicle</td><td style="padding: 6px 0; color: #fff;">${escapeHtml(b.vehicle || '')}</td></tr>
+                <tr><td style="padding: 6px 0; color: #a3a9b8; width: 35%;">When</td><td style="padding: 6px 0; color: #fff;">${escapeHtml(b.date || '')} at ${escapeHtml(b.time || '')}</td></tr>
+                <tr><td style="padding: 6px 0; color: #a3a9b8;">Pickup</td><td style="padding: 6px 0; color: #fff;">${escapeHtml(b.pickup || '')}</td></tr>
+                <tr><td style="padding: 6px 0; color: #a3a9b8;">Dropoff</td><td style="padding: 6px 0; color: #fff;">${escapeHtml(b.dropoff || '')}</td></tr>
+                <tr><td style="padding: 6px 0; color: #a3a9b8;">Vehicle</td><td style="padding: 6px 0; color: #fff;">${escapeHtml(b.vehicle || '')}</td></tr>
             </table>
         </div>
         ${refundBlock}
-        <div style="text-align: center; padding: 25px 0; border-top: 1px solid #333; margin-top: 25px;">
-            <div style="color: #ffffff; font-size: 15px; margin-bottom: 8px;">Need to rebook or have questions?</div>
-            <a href="tel:6126665004" style="color: #D4AF37; font-size: 22px; font-weight: 700; text-decoration: none;">(612) 666-5004</a>
+        <div style="text-align: center; padding: 25px 0; border-top: 1px solid #2a2e36; margin-top: 25px;">
+            <div style="color: #f7f1e3; font-size: 15px; margin-bottom: 8px;">Need to rebook or have questions?</div>
+            <a href="tel:6126665004" style="color: #d9b96a; font-size: 22px; font-weight: 700; text-decoration: none;">(612) 666-5004</a>
         </div>
     </div>
-    <div style="background-color: #1a1a1a; padding: 20px; text-align: center; border-top: 1px solid #333;">
-        <div style="color: #D4AF37; font-size: 14px; font-weight: 600;">MSP Chauffeur Service</div>
-        <div style="color: #666; font-size: 12px; margin-top: 5px;">Premium Transportation in the Twin Cities</div>
+    <div style="background-color: #171a1f; padding: 20px; text-align: center; border-top: 1px solid #2a2e36;">
+        <div style="color: #d9b96a; font-family: Georgia, 'Times New Roman', serif; font-size: 15px; letter-spacing: 1px;">MSP Chauffeur Service</div>
+        <div style="color: #7c8395; font-size: 12px; margin-top: 5px;">Premium Transportation in the Twin Cities</div>
     </div>
 </div>`;
 }
