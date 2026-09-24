@@ -325,13 +325,15 @@ Payment: ${booking.paymentMethod === 'online' ? 'Paid Online' : 'Cash'}${booking
             .then(r => ({ purpose: '1h_sms', kind: 'sms', sid: r.sid, status: r.status })));
         }
       }
-      if (inWindow(rideEnd)) {
-        const htmlReview = generateReviewEmail(booking);
+      // Post-ride review request: only when a Google review link is configured
+      // (set GOOGLE_REVIEW_LINK once the Business Profile exists).
+      const REVIEW_LINK = process.env.GOOGLE_REVIEW_LINK;
+      if (REVIEW_LINK && inWindow(rideEnd)) {
+        const htmlReview = generateReviewEmail(booking, REVIEW_LINK);
         jobs.push(scheduleReminderEmail(process.env.RESEND_API_KEY, FROM_EMAIL, FROM_NAME, booking.email, 'How was your ride with MSP Chauffeur Service?', htmlReview, htmlToText(htmlReview), centralToUTCISO(rideEnd), refId)
           .then(r => ({ purpose: 'review_email', kind: 'email', id: r.id, status: r.status })));
         if (hasMessagingService) {
-          // TODO: replace with this brand's Google review link
-          jobs.push(scheduleSmsTwilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN, process.env.TWILIO_MESSAGING_SERVICE_SID, customerPhone, `Thanks for riding with MSP Chauffeur Service! We'd love your feedback:\n\nhttps://g.page/r/REPLACE_WITH_REVIEW_LINK/review\n\nIt takes less than a minute and means the world to us.`, centralToUTCISO(rideEnd))
+          jobs.push(scheduleSmsTwilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN, process.env.TWILIO_MESSAGING_SERVICE_SID, customerPhone, `Thanks for riding with MSP Chauffeur Service! We'd love your feedback:\n\n${REVIEW_LINK}\n\nIt takes less than a minute and means the world to us.`, centralToUTCISO(rideEnd))
             .then(r => ({ purpose: 'review_sms', kind: 'sms', sid: r.sid, status: r.status })));
         }
       }
@@ -908,7 +910,7 @@ function generateReminderEmail(booking, hoursBeforeText, pickupLink) {
 </div>`;
 }
 
-function generateReviewEmail(booking) {
+function generateReviewEmail(booking, reviewLink) {
   // TODO: replace the g.page URL below with this brand's Google review link
   return `
 <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0a0b0e;">
@@ -925,7 +927,7 @@ function generateReviewEmail(booking) {
         </div>
         <div style="text-align: center; margin: 30px 0;">
             <div style="color: #d9b96a; font-size: 48px; margin-bottom: 15px;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-            <a href="https://g.page/r/REPLACE_WITH_REVIEW_LINK/review" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #2f4fa8 0%, #1b3170 100%); color: #f7f1e3; padding: 18px 45px; text-decoration: none; border-radius: 30px; font-weight: 800; font-size: 18px;">
+            <a href="${reviewLink}" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #2f4fa8 0%, #1b3170 100%); color: #f7f1e3; padding: 18px 45px; text-decoration: none; border-radius: 30px; font-weight: 800; font-size: 18px;">
                 Leave a Review
             </a>
             <div style="color: #a3a9b8; font-size: 12px; margin-top: 10px;">Takes less than a minute</div>
