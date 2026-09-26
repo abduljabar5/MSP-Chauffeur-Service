@@ -223,7 +223,7 @@ body {
     font-weight: 300;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
-.input-luxury::placeholder { color: #9c7280; }
+.input-luxury::placeholder { color: #7c8395; }
 .input-luxury:focus {
     outline: none;
     border-color: rgba(36, 63, 143, 0.65);
