@@ -70,6 +70,7 @@ export default async (req, context) => {
     stops: (() => { let j = m.stops || ''; for (let i = 2; m[`stops${i}`]; i++) j += m[`stops${i}`]; return j ? j.split(' | ').filter(Boolean) : []; })(),
     stopsFee: parseFloat(m.stopsFee) || 0,
     tipType: m.tipType || 'percent',
+    largePartyFee: parseFloat(m.largePartyFee) || 0,
     discount: parseFloat(m.discount) || 0,
     promoCode: m.promoCode || '',
     tip: parseFloat(m.tip) || 0,

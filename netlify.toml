@@ -5,3 +5,30 @@
 [dev]
   port = 8888
   # Static site — Netlify CLI serves the files directly.
+
+# Retired service URLs -> new pages
+[[redirects]]
+  from = "/msp-airport-taxi.html"
+  to = "/msp-airport-black-car-service.html"
+  status = 301
+
+[[redirects]]
+  from = "/msp-airport-cab-service.html"
+  to = "/airport-pickup.html"
+  status = 301
+
+[[redirects]]
+  from = "/msp-airport-limo-service.html"
+  to = "/limousine-service-minneapolis.html"
+  status = 301
+
+[[redirects]]
+  from = "/msp-town-car-service.html"
+  to = "/corporate-car-service.html"
+  status = 301
+
+[[redirects]]
+  from = "/twin-cities-car-service.html"
+  to = "/point-to-point-transportation.html"
+  status = 301
+

@@ -18,13 +18,15 @@ const CONFIG = {
         // Stretch limousine: quote by phone only.
     },
     // Hourly / as-directed service: flat hourly rate per vehicle, billed in whole hours.
-    hourly: { minimumHours: 3, maximumHours: 12 },
+    hourly: { minimumHours: 4, maximumHours: 12, radiusMiles: 20 }, // hourly drop-offs stay within 20 mi of downtown Minneapolis
     fees: {
         airport: 15.00,        // MSP pickup/dropoff fee
         nightSurcharge: 20.00, // 7 PM – 6 AM
         meetAndGreet: 15.00,   // chauffeur meets you inside baggage claim
         childSeat: 25.00,      // per installed child safety seat (max 4)
         stop: 15.00,           // per extra stop en route; mileage is routed through the stops
+        largeParty: 25.00,     // flat fee when the booking is for 7 or more passengers
+        largePartyFrom: 7,
         maxStops: 25           // unlimited in practice — 25 is Google Directions' waypoint ceiling per route
     },
     vehicleNames: {

@@ -164,7 +164,13 @@
         }
     </style>
 </head>
-<body class="bg-lacquer-950 text-ivory-100 font-sans antialiased min-h-screen">
+<body class="bg-transparent text-ivory-100 font-sans antialiased min-h-screen">
+    <!-- Page background photograph -->
+    <div class="fixed inset-0 -z-10 pointer-events-none" aria-hidden="true">
+        <img src="images/photos/fbo-yukon-jet.webp" alt="" class="w-full h-full object-cover object-[center_60%]" width="1600" height="900">
+        <div class="absolute inset-0 bg-lacquer-950/92"></div>
+    </div>
+
 
     <!-- Header -->
     <header class="fixed top-0 w-full z-50 bg-lacquer-950/95 backdrop-blur-xl border-b border-brass-400/15">
@@ -194,7 +200,7 @@
         <div class="min-h-[calc(100vh-64px)] flex flex-col lg:flex-row">
 
             <!-- Left Side: Form -->
-            <div class="flex-1 lg:max-w-2xl">
+            <div class="flex-1 lg:max-w-4xl">
                 <div class="form-container p-6 sm:p-8 lg:p-12">
 
                     <!-- Progress Steps -->
@@ -282,7 +288,7 @@
                                         <input type="radio" name="servicetype" value="hourly" class="sr-only">
                                         <div class="relative px-3 py-3 bg-lacquer-800/40 border border-brass-400/15 rounded-sm text-center transition-all duration-300 hover:border-brass-400/40">
                                             <div class="vehicle-name text-sm font-medium text-ivory-100">Hourly</div>
-                                            <div class="text-[11px] text-lacquer-400 mt-0.5">As directed · 3 hr minimum</div>
+                                            <div class="text-[11px] text-lacquer-400 mt-0.5">As directed · 4 hr minimum</div>
                                         </div>
                                     </label>
                                 </div>
@@ -328,8 +334,7 @@
                             <div class="mb-4 hidden" id="hourly-section">
                                 <label for="hours" class="block text-[11px] text-lacquer-300 tracking-plate uppercase mb-2">Duration</label>
                                 <select id="hours" name="hours" class="input-luxury w-full px-4 py-4 appearance-none cursor-pointer">
-                                    <option value="3">3 hours (minimum)</option>
-                                    <option value="4">4 hours</option>
+                                    <option value="4">4 hours (minimum)</option>
                                     <option value="5">5 hours</option>
                                     <option value="6">6 hours</option>
                                     <option value="7">7 hours</option>
@@ -375,11 +380,11 @@
                             <!-- Vehicle Selection -->
                             <div>
                                 <label class="block text-[11px] text-lacquer-300 tracking-plate uppercase mb-3">Select Vehicle</label>
-                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
                                     <label class="vehicle-card relative cursor-pointer">
                                         <input type="radio" name="vehicle" value="sedan" class="sr-only">
                                         <div class="relative px-2 py-4 bg-lacquer-800/40 border border-brass-400/15 rounded-sm text-center transition-all duration-300 hover:border-brass-400/40">
-                                            <div class="relative rounded-sm mb-3 overflow-hidden bg-[#0e0f12]"><img src="images/fleet/sedan-lincoln.webp" alt="Lincoln Continental sedan" class="block w-full h-20 object-cover" loading="lazy"></div>
+                                            <div class="relative rounded-sm mb-3 overflow-hidden bg-[#0e0f12]"><img src="images/fleet/sedan-lincoln.webp" alt="Lincoln Continental sedan" class="block w-full h-36 sm:h-40 object-cover" loading="lazy"></div>
                                             <div class="vehicle-name text-sm font-medium text-ivory-100">Sedan</div>
                                             <div class="text-[10px] text-brass-400/80 tracking-wide mt-0.5">Lincoln Continental</div>
                                             <div class="text-xs text-lacquer-400 mt-1">1–3 · 4 bags</div>
@@ -388,7 +393,7 @@
                                     <label class="vehicle-card relative cursor-pointer">
                                         <input type="radio" name="vehicle" value="suv" class="sr-only" checked>
                                         <div class="relative px-2 py-4 bg-lacquer-800/40 border border-brass-400/15 rounded-sm text-center transition-all duration-300 hover:border-brass-400/40">
-                                            <div class="relative rounded-sm mb-3 overflow-hidden bg-[#0e0f12]"><img src="images/fleet/suv-gmc-yukon.webp" alt="GMC Yukon Denali SUV" class="block w-full h-20 object-cover" loading="lazy"></div>
+                                            <div class="relative rounded-sm mb-3 overflow-hidden bg-[#0e0f12]"><img src="images/fleet/suv-gmc-yukon.webp" alt="GMC Yukon Denali SUV" class="block w-full h-36 sm:h-40 object-cover" loading="lazy"></div>
                                             <span class="absolute -top-2 left-1/2 -translate-x-1/2 bg-oxblood-500 text-ivory-100 text-[9px] tracking-plate uppercase px-2 py-0.5 rounded-sm">Popular</span>
                                             <div class="vehicle-name text-sm font-medium text-ivory-100">SUV</div>
                                             <div class="text-[10px] text-brass-400/80 tracking-wide mt-0.5">GMC Yukon Denali</div>
@@ -398,7 +403,7 @@
                                     <label class="vehicle-card relative cursor-pointer">
                                         <input type="radio" name="vehicle" value="escalade" class="sr-only">
                                         <div class="relative px-2 py-4 bg-lacquer-800/40 border border-brass-400/15 rounded-sm text-center transition-all duration-300 hover:border-brass-400/40">
-                                            <div class="relative rounded-sm mb-3 overflow-hidden bg-[#0e0f12]"><img src="images/fleet/suv-escalade.webp" alt="Cadillac Escalade SUV" class="block w-full h-20 object-cover" loading="lazy"></div>
+                                            <div class="relative rounded-sm mb-3 overflow-hidden bg-[#0e0f12]"><img src="images/fleet/suv-escalade.webp" alt="Cadillac Escalade SUV" class="block w-full h-36 sm:h-40 object-cover" loading="lazy"></div>
                                             <div class="vehicle-name text-sm font-medium text-ivory-100">Premium SUV</div>
                                             <div class="text-[10px] text-brass-400/80 tracking-wide mt-0.5">Cadillac Escalade</div>
                                             <div class="text-xs text-lacquer-400 mt-1">1–6 · 6 bags</div>
@@ -407,7 +412,7 @@
                                     <label class="vehicle-card relative cursor-pointer">
                                         <input type="radio" name="vehicle" value="van" class="sr-only">
                                         <div class="relative px-2 py-4 bg-lacquer-800/40 border border-brass-400/15 rounded-sm text-center transition-all duration-300 hover:border-brass-400/40">
-                                            <div class="relative rounded-sm mb-3 overflow-hidden bg-[#0e0f12]"><img src="images/fleet/van-sprinter.webp" alt="Mercedes-Benz Sprinter van" class="block w-full h-20 object-cover" loading="lazy"></div>
+                                            <div class="relative rounded-sm mb-3 overflow-hidden bg-[#0e0f12]"><img src="images/fleet/van-sprinter.webp" alt="Mercedes-Benz Sprinter van" class="block w-full h-36 sm:h-40 object-cover" loading="lazy"></div>
                                             <div class="vehicle-name text-sm font-medium text-ivory-100">Sprinter Van</div>
                                             <div class="text-[10px] text-brass-400/80 tracking-wide mt-0.5">Mercedes-Benz</div>
                                             <div class="text-xs text-lacquer-400 mt-1">1–10 · 10 bags</div>
@@ -415,7 +420,7 @@
                                     </label>
                                 </div>
                                 <p class="text-xs text-lacquer-400 mt-3">
-                                    Need a stretch limousine for an event? <a href="tel:+16126665004" class="text-brass-300 hover:text-brass-400 transition-colors">Call (612) 666-5004</a> for a quote.
+                                    Groups of seven or more ride in the Sprinter. Questions? <a href="tel:+16126665004" class="text-brass-300 hover:text-brass-400 transition-colors">(612) 666-5004</a>.
                                 </p>
                             </div>
 
@@ -671,7 +676,7 @@
             </div>
 
             <!-- Right Side: Price Summary (Sticky, desktop) -->
-            <div class="desktop-sidebar lg:flex-1 lg:max-w-md bg-lacquer-900/40 border-t lg:border-t-0 lg:border-l border-brass-400/10">
+            <div class="desktop-sidebar lg:flex-1 lg:max-w-xl bg-lacquer-900/40 border-t lg:border-t-0 lg:border-l border-brass-400/10">
                 <div class="lg:sticky lg:top-16 p-6 sm:p-8 lg:p-12">
                     <h3 class="text-xl font-display text-ivory-100 mb-6">Booking Summary</h3>
 
@@ -745,6 +750,10 @@
                         <div class="flex justify-between text-sm hidden" id="summary-meetgreet-row">
                             <span class="text-lacquer-400 font-light">Meet &amp; Greet</span>
                             <span class="text-ivory-100 font-light" id="summary-meetgreet">$15</span>
+                        </div>
+                        <div class="flex justify-between text-sm hidden" id="summary-party-row">
+                            <span class="text-lacquer-400 font-light">Large Party (7+)</span>
+                            <span class="text-ivory-100 font-light" id="summary-party">$25</span>
                         </div>
                         <div class="flex justify-between text-sm hidden" id="summary-stops-row">
                             <span class="text-lacquer-400 font-light" id="summary-stops-label">Extra Stops</span>
@@ -892,6 +901,10 @@
                 <span class="text-lacquer-400 font-light">Meet &amp; Greet</span>
                 <span class="text-ivory-100 font-light" id="mobile-summary-meetgreet">$15</span>
             </div>
+            <div class="flex justify-between text-sm hidden" id="mobile-summary-party-row">
+                <span class="text-lacquer-400 font-light">Large Party (7+)</span>
+                <span class="text-ivory-100 font-light" id="mobile-summary-party">$25</span>
+            </div>
             <div class="flex justify-between text-sm hidden" id="mobile-summary-stops-row">
                 <span class="text-lacquer-400 font-light" id="mobile-summary-stops-label">Extra Stops</span>
                 <span class="text-ivory-100 font-light" id="mobile-summary-stops">$15</span>
@@ -988,11 +1001,13 @@
                 passengers: '1',
                 vehicle: 'suv',
                 serviceType: 'transfer',
-                hours: 3,
+                hours: 4,
                 stops: [],
                 stopFee: 15,
                 maxStops: 25, // unlimited in practice; Google routes up to 25 waypoints
                 customTip: 0,
+                largePartyFee: 25,
+                dropoffLatLng: null,
                 name: '',
                 email: '',
                 phone: '',
@@ -1442,6 +1457,7 @@
 
                 dropoffAutocomplete.addListener('place_changed', () => {
                     const place = dropoffAutocomplete.getPlace();
+                    booking.data.dropoffLatLng = (place && place.geometry && place.geometry.location) ? { lat: place.geometry.location.lat(), lng: place.geometry.location.lng() } : null;
                     if (place && place.formatted_address) {
                         booking.data.dropoff = dropoffInput.value;
                         booking.data.dropoffValid = true;
@@ -1555,6 +1571,7 @@
 
             document.getElementById('passengers')?.addEventListener('change', (e) => {
                 booking.data.passengers = e.target.value;
+                calculateTotals();
                 saveFormData();
             });
 
@@ -1644,7 +1661,7 @@
             });
 
             document.getElementById('hours')?.addEventListener('change', (e) => {
-                booking.data.hours = parseInt(e.target.value) || 3;
+                booking.data.hours = parseInt(e.target.value) || 4;
                 updateSummary();
                 recalculatePrice();
                 saveFormData();
@@ -1824,6 +1841,17 @@
                     errorMessage = 'Please select destination from the dropdown';
                 }
 
+                // Hourly bookings: drop-off must be within 20 miles of downtown Minneapolis
+                if (booking.currentStep === 1 && booking.data.serviceType === 'hourly' && booking.data.dropoffValid && booking.data.dropoffLatLng) {
+                    const miles = milesFromTwinCities(booking.data.dropoffLatLng);
+                    if (miles > 20) {
+                        dropoffInput.classList.add('input-error');
+                        if (dropoffError) { dropoffError.textContent = `Hourly service stays within 20 miles of the Twin Cities (this address is about ${Math.round(miles)} mi out). Book point to point for longer trips.`; dropoffError.classList.remove('hidden'); }
+                        valid = false;
+                        errorMessage = 'Hourly drop-offs must be within 20 miles of the Twin Cities';
+                    }
+                }
+
                 const stopError = document.getElementById('stop-error');
                 if (stopError) stopError.classList.add('hidden');
                 if (booking.data.serviceType !== 'hourly') {
@@ -1940,7 +1968,7 @@
 
         function recalculatePrice() {
             if (booking.data.serviceType === 'hourly') {
-                const hours = Math.max(3, parseInt(booking.data.hours) || 3);
+                const hours = Math.max(4, parseInt(booking.data.hours) || 4);
                 if (typeof TCBlackCar !== 'undefined' && TCBlackCar.calculateHourlyPrice) {
                     booking.data.baseFare = TCBlackCar.calculateHourlyPrice(booking.data.vehicle, hours);
                 } else {
@@ -2124,6 +2152,21 @@
             }
         }
 
+        function milesFromTwinCities(ll) {
+            const R = 3958.8, toRad = d => d * Math.PI / 180;
+            const lat1 = toRad(44.9778), lon1 = toRad(-93.2650), lat2 = toRad(ll.lat), lon2 = toRad(ll.lng);
+            const a = Math.sin((lat2 - lat1) / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin((lon2 - lon1) / 2) ** 2;
+            return 2 * R * Math.asin(Math.sqrt(a));
+        }
+
+        function renderPartyRow(rowId, amountId) {
+            const row = document.getElementById(rowId), amount = document.getElementById(amountId);
+            if (!row || !amount) return;
+            const on = (parseInt(booking.data.passengers) || 1) >= 7;
+            row.classList.toggle('hidden', !on);
+            if (on) amount.textContent = `$${booking.data.largePartyFee}`;
+        }
+
         function renderCarSeatsRow(rowId, labelId, amountId) {
             const row = document.getElementById(rowId);
             const label = document.getElementById(labelId);
@@ -2160,6 +2203,7 @@
             const meetgreetTotal = booking.data.meetgreet ? booking.data.meetgreetPrice : 0;
             const carSeatsTotal = booking.data.carSeats * booking.data.carSeatPrice;
             const stopsTotal = validStops().length * booking.data.stopFee;
+            const largePartyTotal = (parseInt(booking.data.passengers) || 1) >= 7 ? booking.data.largePartyFee : 0;
 
             // Tip applies only on the final payment step so earlier steps show
             // a clean fare (no anchored-up total before a tip decision).
@@ -2174,7 +2218,7 @@
                 booking.data.tipAmount = 0;
             }
 
-            const subtotal = discountedFare + booking.data.tipAmount + meetgreetTotal + carSeatsTotal + stopsTotal;
+            const subtotal = discountedFare + booking.data.tipAmount + meetgreetTotal + carSeatsTotal + stopsTotal + largePartyTotal;
 
             // Processing fee for online payments (2.9% + $0.30)
             if (booking.data.payment === 'online' && subtotal > 0) {
@@ -2258,6 +2302,7 @@
             // Car seats + stops rows
             renderCarSeatsRow('summary-carseats-row', 'summary-carseats-label', 'summary-carseats');
             renderStopsRow('summary-stops-row', 'summary-stops-label', 'summary-stops');
+            renderPartyRow('summary-party-row', 'summary-party');
 
             // Customer name
             const summaryCustomerRow = document.getElementById('summary-customer-row');
@@ -2358,6 +2403,7 @@
 
             renderCarSeatsRow('mobile-summary-carseats-row', 'mobile-summary-carseats-label', 'mobile-summary-carseats');
             renderStopsRow('mobile-summary-stops-row', 'mobile-summary-stops-label', 'mobile-summary-stops');
+            renderPartyRow('mobile-summary-party-row', 'mobile-summary-party');
 
             const mobileDiscountRow = document.getElementById('mobile-summary-discount-row');
             const mobileDiscount = document.getElementById('mobile-summary-discount');
@@ -2471,6 +2517,7 @@
                 stops: validStops(),
                 stopsFee: validStops().length * booking.data.stopFee,
                 tipType: booking.data.tip === 'custom' ? 'custom' : 'percent',
+                largePartyFee: (parseInt(booking.data.passengers) || 1) >= 7 ? booking.data.largePartyFee : 0,
                 passengers: booking.data.passengers,
                 flight: booking.data.flight,
                 notes: booking.data.notes,

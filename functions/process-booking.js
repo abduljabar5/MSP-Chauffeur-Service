@@ -149,6 +149,7 @@ export async function processBooking(booking) {
   const stopsFee = booking.stopsFee || stops.length * 15;
   const formattedStopsFee = '$' + stopsFee;
   const serviceLine = isHourly ? `Hourly service · ${hours} hours · as directed` : '';
+  const largePartyFee = parseFloat(booking.largePartyFee) || 0;
 
   const pickupLink = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(booking.pickup);
   const dropoffLink = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(booking.dropoff);
@@ -249,9 +250,10 @@ Questions? (612) 666-5004`;
     const ownerCarSeatLine = carSeats > 0 ? `\n🧒 CAR SEATS: ${carSeats} (+${formattedCarSeats})` : '';
     const ownerHourlyLine = isHourly ? `\n⏱ HOURLY: ${hours} HRS AS DIRECTED` : '';
     const ownerStopsLine = stops.length ? `\n📍 STOPS (+${formattedStopsFee}): ${stops.join(' → ')}` : '';
+    const ownerPartyLine = largePartyFee > 0 ? `\n👥 LARGE PARTY (+$${largePartyFee})` : '';
     const ownerSms = `🚨 NEW BOOKING 🚨
 
-💰 FARE: ${formattedTotal}${ownerHourlyLine}${ownerStopsLine}${ownerDiscountLine}${ownerRoundTripLine}${ownerMeetGreetLine}${ownerCarSeatLine}
+💰 FARE: ${formattedTotal}${ownerHourlyLine}${ownerStopsLine}${ownerPartyLine}${ownerDiscountLine}${ownerRoundTripLine}${ownerMeetGreetLine}${ownerCarSeatLine}
 🗓️ WHEN: ${booking.date} at ${booking.time}${ownerReturnLine}
 
 📍 PICKUP: ${booking.pickup}
@@ -691,6 +693,7 @@ function generateCustomerEmail(booking, total, baseFare, discount, tip, processi
                     ${hasMeetAndGreet ? `<span style="font-size: 14px; margin-left: 20px;">Meet & Greet: <strong>${meetAndGreetPrice}</strong></span>` : ''}
                     ${(parseInt(booking.carSeats) || 0) > 0 ? `<span style="font-size: 14px; margin-left: 20px;">Car Seats × ${booking.carSeats}: <strong>$${booking.carSeatsTotal || parseInt(booking.carSeats) * 25}</strong></span>` : ''}
                     ${(Array.isArray(booking.stops) && booking.stops.length) ? `<span style="font-size: 14px; margin-left: 20px;">Stops × ${booking.stops.length}: <strong>$${booking.stopsFee || booking.stops.length * 15}</strong></span>` : ''}
+                    ${(parseFloat(booking.largePartyFee) || 0) > 0 ? `<span style="font-size: 14px; margin-left: 20px;">Large party: <strong>$${booking.largePartyFee}</strong></span>` : ''}
                     ${booking.serviceType === 'hourly' ? `<span style="font-size: 14px; margin-left: 20px;">Hourly: <strong>${booking.hours} hrs</strong></span>` : ''}
                     ${hasTip ? `<span style="font-size: 14px; margin-left: 20px;">Tip: <strong>${tip}</strong></span>` : ''}
                     ${hasProcessingFee ? `<span style="font-size: 14px; margin-left: 20px;">Fee: <strong>${processingFee}</strong></span>` : ''}
@@ -770,6 +773,7 @@ function generateOwnerEmail(booking, total, baseFare, discount, tip, processingF
             ${hasMeetAndGreet ? `<span style="color: #a3a9b8; font-size: 15px; margin-left: 25px;">Meet & Greet: <strong style="color: #d9b96a;">${meetAndGreetPrice}</strong></span>` : ''}
             ${(parseInt(booking.carSeats) || 0) > 0 ? `<span style="color: #a3a9b8; font-size: 15px; margin-left: 25px;">Car Seats × ${booking.carSeats}: <strong style="color: #d9b96a;">$${booking.carSeatsTotal || parseInt(booking.carSeats) * 25}</strong></span>` : ''}
             ${(Array.isArray(booking.stops) && booking.stops.length) ? `<span style="color: #a3a9b8; font-size: 15px; margin-left: 25px;">Stops × ${booking.stops.length}: <strong style="color: #d9b96a;">$${booking.stopsFee || booking.stops.length * 15}</strong></span>` : ''}
+            ${(parseFloat(booking.largePartyFee) || 0) > 0 ? `<span style="color: #a3a9b8; font-size: 15px; margin-left: 25px;">Large party: <strong style="color: #d9b96a;">$${booking.largePartyFee}</strong></span>` : ''}
             ${hasDiscount ? `<span style="color: #a3a9b8; font-size: 15px; margin-left: 25px;">Discount: <strong style="color: #ff6b6b;">-${discount}</strong></span>` : ''}
             ${hasTip ? `<span style="color: #a3a9b8; font-size: 15px; margin-left: 25px;">Tip: <strong style="color: #d9b96a;">${tip}</strong></span>` : ''}
             ${hasProcessingFee ? `<span style="color: #a3a9b8; font-size: 15px; margin-left: 25px;">Fee: <strong style="color: #a3a9b8;">${processingFee}</strong></span>` : ''}
