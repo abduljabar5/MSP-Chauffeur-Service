@@ -847,3 +847,49 @@ window.TCBlackCar = {
     formatDate,
     formatTime
 };
+
+
+// =============================================================================
+// HOME GALLERY SLIDESHOW
+// =============================================================================
+(function initGallery() {
+    const root = document.getElementById('fleet-gallery');
+    if (!root) return;
+    const slides = Array.from(root.querySelectorAll('.gallery-slide'));
+    const dots = Array.from(root.querySelectorAll('.gallery-dot'));
+    if (slides.length < 2) return;
+    let index = 0, timer = null;
+    const INTERVAL = 4500;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function show(n) {
+        index = (n + slides.length) % slides.length;
+        slides.forEach((s, i) => s.classList.toggle('is-active', i === index));
+        dots.forEach((d, i) => { d.classList.toggle('is-active', i === index); d.setAttribute('aria-selected', i === index); });
+        // warm the next image so the crossfade never shows a blank
+        const next = slides[(index + 1) % slides.length].querySelector('img');
+        if (next && next.loading === 'lazy') next.loading = 'eager';
+    }
+    function play() { if (reduceMotion) return; stop(); timer = setInterval(() => show(index + 1), INTERVAL); }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+
+    root.querySelectorAll('.gallery-arrow').forEach(b => b.addEventListener('click', () => { show(index + parseInt(b.dataset.dir, 10)); play(); }));
+    dots.forEach(d => d.addEventListener('click', () => { show(parseInt(d.dataset.go, 10)); play(); }));
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', play);
+    root.addEventListener('focusin', stop);
+    root.addEventListener('focusout', play);
+    document.addEventListener('visibilitychange', () => document.hidden ? stop() : play());
+
+    // touch swipe
+    let startX = null;
+    root.addEventListener('touchstart', e => { startX = e.touches[0].clientX; stop(); }, { passive: true });
+    root.addEventListener('touchend', e => {
+        if (startX === null) return;
+        const dx = e.changedTouches[0].clientX - startX; startX = null;
+        if (Math.abs(dx) > 40) show(index + (dx < 0 ? 1 : -1));
+        play();
+    }, { passive: true });
+
+    show(0); play();
+})();
