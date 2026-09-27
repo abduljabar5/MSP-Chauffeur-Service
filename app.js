@@ -147,10 +147,20 @@ function initMobileMenu() {
     if (!mobileMenuBtn || !mobileMenu) return;
 
     // Lock the page behind the menu so the menu itself scrolls, not the site.
+    let lockedScrollY = 0;
     const setMenu = (open) => {
         mobileMenu.classList.toggle('hidden', !open);
         mobileMenuBtn.setAttribute('aria-expanded', open);
-        document.body.classList.toggle('menu-open', open);
+        // iOS ignores overflow:hidden on body, so pin the body in place instead.
+        if (open) {
+            lockedScrollY = window.scrollY;
+            document.body.style.top = `-${lockedScrollY}px`;
+            document.body.classList.add('menu-open');
+        } else if (document.body.classList.contains('menu-open')) {
+            document.body.classList.remove('menu-open');
+            document.body.style.top = '';
+            window.scrollTo(0, lockedScrollY);
+        }
     };
 
     mobileMenuBtn.addEventListener('click', (e) => {

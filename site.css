@@ -387,4 +387,4 @@ input[type="time"]::-webkit-datetime-edit { cursor: pointer; }
 
 /* Mobile menu: scroll inside the panel, freeze the page behind it */
 #mobile-menu { max-height: calc(100dvh - 5rem); overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
-body.menu-open { overflow: hidden; }
+body.menu-open { position: fixed; left: 0; right: 0; width: 100%; overflow: hidden; }
