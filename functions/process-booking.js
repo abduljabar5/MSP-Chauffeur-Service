@@ -241,7 +241,8 @@ ${hourlyLine}${stopsSmsLine}${roundTripLine}${returnLine}${meetGreetLine}${carSe
 Total: ${formattedTotal}${booking.paymentMethod === 'online' ? ' (Paid)' : ''}
 
 Your driver will arrive on time.
-Questions? (612) 666-5004`;
+Questions? (612) 666-5004
+Reply STOP to opt out`;
 
     const ownerDiscountLine = hasDiscount ? `\n🏷️ DISCOUNT: -${formattedDiscount} (${promoCode})` : '';
     const ownerRoundTripLine = isRoundTrip ? `\n🔄 ROUND TRIP` : '';
