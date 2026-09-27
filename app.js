@@ -146,22 +146,25 @@ function initMobileMenu() {
 
     if (!mobileMenuBtn || !mobileMenu) return;
 
+    // Lock the page behind the menu so the menu itself scrolls, not the site.
+    const setMenu = (open) => {
+        mobileMenu.classList.toggle('hidden', !open);
+        mobileMenuBtn.setAttribute('aria-expanded', open);
+        document.body.classList.toggle('menu-open', open);
+    };
+
     mobileMenuBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        mobileMenu.classList.toggle('hidden');
-        const isOpen = !mobileMenu.classList.contains('hidden');
-        mobileMenuBtn.setAttribute('aria-expanded', isOpen);
+        setMenu(mobileMenu.classList.contains('hidden'));
     });
 
     mobileMenu.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            mobileMenu.classList.add('hidden');
-        });
+        link.addEventListener('click', () => setMenu(false));
     });
 
     document.addEventListener('click', (e) => {
         if (!mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-            mobileMenu.classList.add('hidden');
+            setMenu(false);
         }
     });
 }

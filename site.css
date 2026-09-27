@@ -384,3 +384,7 @@ input[type="time"]::-webkit-datetime-edit { cursor: pointer; }
 
 /* Mobile menu must be opaque over scrolled content */
 #mobile-menu { background-color: #0a0b0e; }
+
+/* Mobile menu: scroll inside the panel, freeze the page behind it */
+#mobile-menu { max-height: calc(100dvh - 5rem); overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
+body.menu-open { overflow: hidden; }
