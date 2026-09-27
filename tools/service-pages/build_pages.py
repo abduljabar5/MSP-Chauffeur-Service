@@ -126,10 +126,10 @@ def section_steps(p):
 '''
 
 FLEET = [
-    ('Sprinter Van', 'Mercedes-Benz Sprinter', '7–10 passengers · 10 bags', 'From $110', 'images/fleet/van-sprinter.webp'),
     ('Premium SUV', 'Cadillac Escalade', '1–6 passengers · 6 bags', 'From $90', 'images/fleet/suv-escalade.webp'),
     ('SUV', 'GMC Yukon Denali', '1–7 passengers · 6 bags', 'From $75', 'images/fleet/suv-gmc-yukon.webp'),
     ('Sedan', 'Lincoln Continental', '1–3 passengers · 4 bags', 'From $60', 'images/fleet/sedan-lincoln.webp'),
+    ('Sprinter Van', 'Mercedes-Benz Sprinter', '1–15 passengers · 15 bags', 'From $110', 'images/fleet/van-sprinter.webp'),
 ]
 def section_fleet(p):
     cards = ''
