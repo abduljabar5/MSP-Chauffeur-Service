@@ -14,7 +14,7 @@ const CONFIG = {
         sedan:    { base: 60.00,  min: 65.00,  perMile: 3.30, hourly: 75  },  // Lincoln Continental — 1-3 passengers, 4 bags
         suv:      { base: 75.00,  min: 80.00,  perMile: 3.60, hourly: 90  },  // GMC Yukon Denali — 1-6 passengers, 6 bags
         escalade: { base: 90.00,  min: 95.00,  perMile: 3.80, hourly: 110 },  // Cadillac Escalade — 1-6 passengers, 6 bags
-        van:      { base: 110.00, min: 120.00, perMile: 3.90, hourly: 130 }   // Mercedes Sprinter — 1-15 passengers, 15 bags
+        van:      { base: 160.00, min: 160.00, perMile: 3.90, hourly: 198 }   // Mercedes Sprinter — 1-15 passengers, 15 bags
         // Stretch limousine: quote by phone only.
     },
     // Hourly / as-directed service: flat hourly rate per vehicle, billed in whole hours.

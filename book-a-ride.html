@@ -339,7 +339,7 @@
                                     <option value="11">11 hours</option>
                                     <option value="12">12 hours</option>
                                 </select>
-                                <p class="text-xs text-lacquer-400 mt-2" id="hourly-rate-note">Chauffeur and vehicle stay with you. Sedan $75/hr · SUV $90/hr · Premium SUV $110/hr · Sprinter $130/hr.</p>
+                                <p class="text-xs text-lacquer-400 mt-2" id="hourly-rate-note">Chauffeur and vehicle stay with you. Sedan $75/hr · SUV $90/hr · Premium SUV $110/hr · Sprinter $198/hr.</p>
                             </div>
 
                             <!-- Date & Time -->
@@ -369,7 +369,13 @@
                                     <option value="8">8 Passengers</option>
                                     <option value="9">9 Passengers</option>
                                     <option value="10">10 Passengers</option>
+                                    <option value="11">11 Passengers</option>
+                                    <option value="12">12 Passengers</option>
+                                    <option value="13">13 Passengers</option>
+                                    <option value="14">14 Passengers</option>
+                                    <option value="15">15 Passengers</option>
                                 </select>
+                                <p id="passengers-note" class="text-xs text-brass-300 mt-2 hidden"></p>
                             </div>
 
                             <!-- Vehicle Selection -->
@@ -377,7 +383,7 @@
                                 <label class="block text-[11px] text-lacquer-300 tracking-plate uppercase mb-3">Select Vehicle</label>
                                 <div class="grid grid-cols-2 gap-5">
                                     <label class="vehicle-card relative cursor-pointer">
-                                        <input type="radio" name="vehicle" value="sedan" class="sr-only">
+                                        <input type="radio" name="vehicle" value="sedan" class="sr-only" data-max="3">
                                         <div class="relative px-2 py-4 bg-lacquer-800/40 border border-brass-400/15 rounded-sm text-center transition-all duration-300 hover:border-brass-400/40">
                                             <div class="relative rounded-sm mb-3 overflow-hidden bg-[#0e0f12]"><img src="images/fleet/sedan-lincoln.webp" alt="Lincoln Continental sedan" class="block w-full h-44 sm:h-60 object-cover" loading="lazy"></div>
                                             <div class="vehicle-name text-base font-medium text-ivory-100">Sedan</div>
@@ -386,7 +392,7 @@
                                         </div>
                                     </label>
                                     <label class="vehicle-card relative cursor-pointer">
-                                        <input type="radio" name="vehicle" value="suv" class="sr-only" checked>
+                                        <input type="radio" name="vehicle" value="suv" class="sr-only" data-max="7" checked>
                                         <div class="relative px-2 py-4 bg-lacquer-800/40 border border-brass-400/15 rounded-sm text-center transition-all duration-300 hover:border-brass-400/40">
                                             <div class="relative rounded-sm mb-3 overflow-hidden bg-[#0e0f12]"><img src="images/fleet/suv-gmc-yukon.webp" alt="GMC Yukon Denali SUV" class="block w-full h-44 sm:h-60 object-cover" loading="lazy"></div>
                                             <span class="absolute -top-2 left-1/2 -translate-x-1/2 bg-oxblood-500 text-ivory-100 text-[9px] tracking-plate uppercase px-2 py-0.5 rounded-sm">Popular</span>
@@ -396,7 +402,7 @@
                                         </div>
                                     </label>
                                     <label class="vehicle-card relative cursor-pointer">
-                                        <input type="radio" name="vehicle" value="escalade" class="sr-only">
+                                        <input type="radio" name="vehicle" value="escalade" class="sr-only" data-max="6">
                                         <div class="relative px-2 py-4 bg-lacquer-800/40 border border-brass-400/15 rounded-sm text-center transition-all duration-300 hover:border-brass-400/40">
                                             <div class="relative rounded-sm mb-3 overflow-hidden bg-[#0e0f12]"><img src="images/fleet/suv-escalade.webp" alt="Cadillac Escalade SUV" class="block w-full h-44 sm:h-60 object-cover" loading="lazy"></div>
                                             <div class="vehicle-name text-base font-medium text-ivory-100">Premium SUV</div>
@@ -405,7 +411,7 @@
                                         </div>
                                     </label>
                                     <label class="vehicle-card relative cursor-pointer">
-                                        <input type="radio" name="vehicle" value="van" class="sr-only">
+                                        <input type="radio" name="vehicle" value="van" class="sr-only" data-max="15">
                                         <div class="relative px-2 py-4 bg-lacquer-800/40 border border-brass-400/15 rounded-sm text-center transition-all duration-300 hover:border-brass-400/40">
                                             <div class="relative rounded-sm mb-3 overflow-hidden bg-[#0e0f12]"><img src="images/fleet/van-sprinter.webp" alt="Mercedes-Benz Sprinter van" class="block w-full h-44 sm:h-60 object-cover" loading="lazy"></div>
                                             <div class="vehicle-name text-base font-medium text-ivory-100">Sprinter Van</div>
@@ -1575,6 +1581,7 @@
 
             document.getElementById('passengers')?.addEventListener('change', (e) => {
                 booking.data.passengers = e.target.value;
+                applyCapacity('passengers');
                 calculateTotals();
                 saveFormData();
             });
@@ -1582,11 +1589,13 @@
             document.querySelectorAll('input[name="vehicle"]').forEach(radio => {
                 radio.addEventListener('change', (e) => {
                     booking.data.vehicle = e.target.value;
+                    applyCapacity('vehicle');
                     updateSummary();
                     recalculatePrice();
                     saveFormData();
                 });
             });
+            applyCapacity('vehicle');
 
             document.getElementById('name')?.addEventListener('input', (e) => {
                 booking.data.name = e.target.value;
@@ -1976,7 +1985,7 @@
                 if (typeof TCBlackCar !== 'undefined' && TCBlackCar.calculateHourlyPrice) {
                     booking.data.baseFare = TCBlackCar.calculateHourlyPrice(booking.data.vehicle, hours);
                 } else {
-                    const hourlyRates = { sedan: 75, suv: 90, escalade: 110, van: 130 };
+                    const hourlyRates = { sedan: 75, suv: 90, escalade: 110, van: 198 };
                     booking.data.baseFare = (hourlyRates[booking.data.vehicle] || 75) * hours;
                 }
                 calculateTotals();
@@ -1995,7 +2004,7 @@
                     sedan: { base: 60, perMile: 3.30 },
                     suv: { base: 75, perMile: 3.60 },
                     escalade: { base: 90, perMile: 3.80 },
-                    van: { base: 110, perMile: 3.90 }
+                    van: { base: 160, perMile: 3.90 }
                 };
                 const rate = rates[booking.data.vehicle] || rates.sedan;
                 booking.data.baseFare = Math.ceil(rate.base + (Math.max(0, booking.data.distance - 7) * rate.perMile));
@@ -2161,6 +2170,30 @@
             const lat1 = toRad(44.9778), lon1 = toRad(-93.2650), lat2 = toRad(ll.lat), lon2 = toRad(ll.lng);
             const a = Math.sin((lat2 - lat1) / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin((lon2 - lon1) / 2) ** 2;
             return 2 * R * Math.asin(Math.sqrt(a));
+        }
+
+        // Vehicles can only be chosen for the passengers they seat, and vice versa.
+        const VEHICLE_LABELS = { sedan: 'Sedan', suv: 'SUV', escalade: 'Premium SUV', van: 'Sprinter Van' };
+        function applyCapacity(changed) {
+            const count = parseInt(booking.data.passengers) || 1;
+            const radios = Array.from(document.querySelectorAll('input[name="vehicle"]'));
+            const note = document.getElementById('passengers-note');
+            radios.forEach(r => {
+                const max = parseInt(r.dataset.max) || 99;
+                const tooSmall = count > max;
+                r.disabled = tooSmall;
+                const card = r.closest('.vehicle-card');
+                if (card) { card.classList.toggle('opacity-40', tooSmall); card.classList.toggle('pointer-events-none', tooSmall); card.title = tooSmall ? `${VEHICLE_LABELS[r.value]} seats up to ${max}` : ''; }
+            });
+            const current = radios.find(r => r.value === booking.data.vehicle);
+            if (current && current.disabled) {
+                // pick the smallest vehicle that fits
+                const fit = radios.filter(r => !r.disabled).sort((a, b) => parseInt(a.dataset.max) - parseInt(b.dataset.max))[0];
+                if (fit) { fit.checked = true; booking.data.vehicle = fit.value; updateSummary(); recalculatePrice(); }
+                if (note) { note.textContent = `${count} passengers need the ${VEHICLE_LABELS[fit ? fit.value : 'van']}. We've switched your vehicle.`; note.classList.remove('hidden'); }
+            } else if (note && changed === 'passengers') {
+                note.classList.add('hidden');
+            }
         }
 
         function renderPartyRow(rowId, amountId) {

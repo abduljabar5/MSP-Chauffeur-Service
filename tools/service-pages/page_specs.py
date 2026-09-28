@@ -185,7 +185,7 @@ dict(file=R['hourly'][0], title='Hourly Car Service Minneapolis | Chauffeur by t
      bullets_eyebrow='Benefits', bullets_h2='Why clients book by the hour',
      bullets=[('Flexibility', 'Tailor the day on the fly, with unscheduled stops or an extended booking as needed.'), ('Professional chauffeurs', 'Licensed, background-checked and focused on punctuality and comfort.'),
               ('Luxury fleet', 'Sedan, SUV, Escalade or Sprinter, all well maintained, with water and chargers.'), ('Minimum booking', 'Hourly reservations start at four hours.'),
-              ('Multi-stop friendly', 'Perfect for errands, tours, meetings and events.'), ('Clear pricing', 'Sedan $75, SUV $90, Premium SUV $110, Sprinter $130 per hour.')],
+              ('Multi-stop friendly', 'Perfect for errands, tours, meetings and events.'), ('Clear pricing', 'Sedan $75, SUV $90, Premium SUV $110, Sprinter $198 per hour.')],
      steps_h2='How hourly booking works',
      steps=[('Tell us your schedule', 'Start time, estimated hours, first pickup and a general sense of the day.'), ('Get an hourly rate', 'Quoted before you confirm, with a four-hour minimum.'),
             ('Your chauffeur arrives', 'And stays available for the whole booked window, waiting between stops.'), ('Change plans freely', 'Running long or adding a stop does not need a new booking, just tell your chauffeur.')],
