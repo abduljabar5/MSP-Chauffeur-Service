@@ -277,11 +277,13 @@ Payment: ${booking.paymentMethod === 'online' ? 'Paid Online' : 'Cash'}${booking
     });
 
     try {
+      const customerOptedIn = booking.smsConsent !== false; // older bookings without the flag keep texting
       const [customerRes, ownerRes] = await Promise.all([
-        sendSms(customerPhone, customerSms),
+        customerOptedIn ? sendSms(customerPhone, customerSms) : Promise.resolve({ ok: true, skipped: true }),
         sendSms(OWNER_PHONE, ownerSms)
       ]);
       if (!customerRes.ok) console.error('Customer SMS failed:', await customerRes.text());
+      if (customerRes.skipped) console.log('Customer SMS skipped: no consent');
       if (!ownerRes.ok) console.error('Owner SMS failed:', await ownerRes.text());
       return {
         customer: customerRes.ok ? 'sent' : 'failed',
@@ -323,7 +325,7 @@ Payment: ${booking.paymentMethod === 'online' ? 'Paid Online' : 'Cash'}${booking
         const html1 = generateReminderEmail(booking, 'in 1 hour', pickupLink);
         jobs.push(scheduleReminderEmail(process.env.RESEND_API_KEY, FROM_EMAIL, FROM_NAME, booking.email, `Ride reminder: ${booking.time} today`, html1, htmlToText(html1), centralToUTCISO(reminder1h), refId)
           .then(r => ({ purpose: '1h_email', kind: 'email', id: r.id, status: r.status })));
-        if (hasMessagingService) {
+        if (hasMessagingService && booking.smsConsent !== false) {
           jobs.push(scheduleSmsTwilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN, process.env.TWILIO_MESSAGING_SERVICE_SID, customerPhone, `MSP Chauffeur Service\n\nYour ride is in 1 hour!\n\n${booking.date} at ${booking.time}\nPickup: ${booking.pickup}\n\nQuestions? (612) 666-5004`, centralToUTCISO(reminder1h))
             .then(r => ({ purpose: '1h_sms', kind: 'sms', sid: r.sid, status: r.status })));
         }

@@ -71,6 +71,7 @@ export default async (req, context) => {
     stopsFee: parseFloat(m.stopsFee) || 0,
     tipType: m.tipType || 'percent',
     largePartyFee: parseFloat(m.largePartyFee) || 0,
+    smsConsent: m.smsConsent !== 'false',
     discount: parseFloat(m.discount) || 0,
     promoCode: m.promoCode || '',
     tip: parseFloat(m.tip) || 0,
