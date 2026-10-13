@@ -117,7 +117,7 @@ export async function processBooking(booking) {
   const OWNER_PHONE = process.env.OWNER_PHONE || '+16126665004'; // dispatch line; override via env
   const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'bookings@mspairportchauffeur.com'; // must be on a domain verified in Resend
   const FROM_NAME = 'MSP Chauffeur Service';
-  const TWILIO_FROM = process.env.TWILIO_FROM_NUMBER || '+16129991462'; // set TWILIO_FROM_NUMBER in env
+  const TWILIO_FROM = process.env.TWILIO_FROM_NUMBER || '+16123240435'; // set TWILIO_FROM_NUMBER in env
 
   // Format data
   const formattedTotal = '$' + (booking.total || 0);
