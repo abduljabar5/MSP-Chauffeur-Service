@@ -365,8 +365,8 @@
         </div>
     </div>
 
-    <!-- Google Maps API -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbnDwOVUFnHx7N4uQVsjUMAO_4acoHyqQ&libraries=places"></script>
+    <!-- Google Maps API (disabled while booking is paused) -->
+    <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbnDwOVUFnHx7N4uQVsjUMAO_4acoHyqQ&libraries=places"></script> -->
 
     <script src="app.js"></script>
     <script>
@@ -594,6 +594,7 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
+            if (!document.getElementById('booking-form')) return; // booking paused
             checkPaymentReturn();
             checkPromoCode();
             initBookingPage();
@@ -2121,6 +2122,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            if (!document.getElementById('booking-form')) return; // booking paused
             initMobilePriceBar();
             updateMobileActionButton();
         });
