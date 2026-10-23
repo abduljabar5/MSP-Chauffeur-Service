@@ -2,6 +2,10 @@
   publish = "."
   functions = "functions"
 
+[build.environment]
+  # Pin the Node.js runtime for builds and Functions (Stripe advisory, Oct 2026). Netlify Functions follow this version.
+  NODE_VERSION = "24"
+
 [dev]
   port = 8888
   # Static site — Netlify CLI serves the files directly.
